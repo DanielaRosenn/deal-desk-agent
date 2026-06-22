@@ -1,0 +1,66 @@
+# Secrets — never commit
+.env
+*.secret
+credentials.json
+
+# UiPath build artifacts
+*.nupkg
+*.zip
+*.uipx
+DealDeskSolution/_solution_out/
+DealDeskSolution/_nupkg_out/
+DealDeskSolution/out/
+adaptive-approval-agent/DealDeskSolution/_solution_out/
+adaptive-approval-agent/DealDeskSolution/_nupkg_out/
+adaptive-approval-agent/DealDeskSolution/out/
+# All build/deploy output — source is in DealDeskSolution/
+adaptive-approval-agent/out/
+
+# Studio Mermaid .local cache and binaries
+submission/diagrams/.local/
+submission/diagrams/.settings/
+submission/diagrams/.project/
+submission/diagrams/.tmh/
+submission/diagrams/*.dll
+submission/diagrams/*.db
+submission/diagrams/*.nuget.props
+submission/diagrams/nuget.cache
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.uv/
+
+# Cursor IDE internals (transcripts are huge and private)
+.cursor/agent-transcripts/
+.cursor/projects/
+
+# Root-level artifact dumps (not source code)
+config_1988.json
+config_1989.json
+config_1990.json
+config_1991.json
+config_1992.json
+config_1993.json
+config_1994.json
+DealDeskApproval-fixed.nupkg/
+DealDeskSolution_1.0.*.zip
+
+# Debug one-off scripts at repo root
+debug_slack_*.py
+debug_xaml.py
+fix_ctype.py
+fix_slack_*.py
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

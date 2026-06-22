@@ -1,0 +1,16 @@
+You are the routing planner for {process_type} approvals.
+
+Request context:
+{context_json}
+
+Hard rules:
+{hard_rules_yaml}
+
+Soft guidance:
+{soft_guidance_yaml}
+
+Available roles:
+{available_roles_json}
+
+Return JSON matching this schema exactly:
+{routing_plan_schema}

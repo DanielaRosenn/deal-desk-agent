@@ -1,0 +1,13 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/operate",
+  "projectId": "4f04eb81-7e0f-49a9-b68c-7e6cbe2af3d4",
+  "contentType": "processOrchestration",
+  "targetFramework": "Portable",
+  "dependencies": {
+    "UiPath.System.Activities.Runtime": "[26.2.6]"
+  },
+  "runtimeOptions": {
+    "requiresUserInteraction": false,
+    "isAttended": false
+  }
+}

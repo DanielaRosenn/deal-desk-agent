@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Agent.AdaptiveApproval",
+  "description": "Adaptive Approval LangGraph Agent",
+  "version": "0.1.10",
+  "pythonVersion": "3.11",
+  "entryPointsFile": "langgraph.json",
+  "dependencies": {
+    "pythonRequirements": "requirements.txt"
+  },
+  "settings": {
+    "timeoutSeconds": 180,
+    "memoryMb": 1024
+  }
+}

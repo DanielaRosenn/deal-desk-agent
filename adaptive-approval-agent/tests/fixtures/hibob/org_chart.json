@@ -1,0 +1,7 @@
+{
+  "employees": [
+    { "id": "u-manager", "email": "manager@example.com", "manager_id": "u-director" },
+    { "id": "u-director", "email": "director@example.com", "manager_id": "u-vp" },
+    { "id": "u-vp", "email": "vp@example.com", "manager_id": null }
+  ]
+}

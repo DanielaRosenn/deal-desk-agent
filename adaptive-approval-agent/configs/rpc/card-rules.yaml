@@ -1,0 +1,13 @@
+personas:
+  manager:
+    max_primary: 4
+    max_expandable: 4
+  director:
+    max_primary: 5
+    max_expandable: 6
+  vp:
+    max_primary: 6
+    max_expandable: 10
+  cfo:
+    max_primary: 5
+    max_expandable: 8

@@ -1,0 +1,378 @@
+﻿<Activity mc:Ignorable="sap sap2010" x:Class="WaitDecision" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sys="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:umam="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:umame="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail.Enums;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:umamm="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail.Models;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:upae="clr-namespace:UiPath.Persistence.Activities.ExternalTask;assembly=UiPath.Persistence.Activities" xmlns:upamt="clr-namespace:UiPath.Persistence.Activities.Model.Task;assembly=UiPath.Persistence.Activities" xmlns:upat="clr-namespace:UiPath.Persistence.Activities.Tasks;assembly=UiPath.Persistence.Activities" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_ApprovalBodyJson" Type="InArgument(x:String)" />
+    <x:Property Name="in_RenderedCardHtml" Type="InArgument(x:String)" />
+    <x:Property Name="in_HitlApiKey" Type="InArgument(x:String)" />
+    <x:Property Name="in_HitlApiUrl" Type="InArgument(x:String)" />
+    <x:Property Name="in_HitlCreateResponseJson" Type="InArgument(x:String)" />
+    <x:Property Name="in_OrchestratorFolderId" Type="InArgument(x:Int32)" />
+    <x:Property Name="in_SlackBotToken" Type="InArgument(x:String)" />
+    <x:Property Name="out_HitlApprovalId" Type="OutArgument(x:String)" />
+    <x:Property Name="out_ResponseToken" Type="OutArgument(x:String)" />
+    <x:Property Name="out_ApproverEmail" Type="OutArgument(x:String)" />
+    <x:Property Name="out_Decision" Type="OutArgument(x:String)" />
+    <x:Property Name="out_DecisionComments" Type="OutArgument(x:String)" />
+  </x:Members>
+  <VisualBasic.Settings>
+    <x:Null />
+  </VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>WaitDecision_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>Newtonsoft.Json.Linq</x:String>
+      <x:String>System.Net.Http</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities.Mail.Models</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities.Mail.Enums</x:String>
+      <x:String>UiPath.Shared.Activities.Utils</x:String>
+      <x:String>UiPath.Persistence.Activities.Model.Task</x:String>
+      <x:String>UiPath.Persistence.Activities.ExternalTask</x:String>
+      <x:String>UiPath.Persistence.Activities.BaseTask</x:String>
+      <x:String>UiPath.Persistence.Activities</x:String>
+      <x:String>UiPath.Persistence.Activities.Tasks</x:String>
+      <x:String>UiPath.Persistence.Activities.Model</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Net.Http</AssemblyReference>
+      <AssemblyReference>System.Net.Primitives</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Primitives</AssemblyReference>
+      <AssemblyReference>System.Text.Json</AssemblyReference>
+      <AssemblyReference>UiPath.MicrosoftOffice365.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Persistence.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic.Core</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Create Approval, Send Email, Wait for Decision (Action Center)" sap2010:WorkflowViewState.IdRef="Main_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="HitlResponseJson" />
+      <Variable x:TypeArguments="x:String" Default="[&quot;Deal Desk Approval&quot;]" Name="ApprovalTitle" />
+      <Variable x:TypeArguments="x:String" Name="SanitizedApprovalBodyJson" />
+      <Variable x:TypeArguments="x:String" Name="HitlApiUrlEffective" />
+      <Variable x:TypeArguments="x:String" Name="HitlApiKeyEffective" />
+      <Variable x:TypeArguments="x:String" Name="HitlApprovalId" />
+      <Variable x:TypeArguments="x:String" Name="HitlResponseToken" />
+      <Variable x:TypeArguments="x:String" Name="HitlApproverEmail" />
+      <Variable x:TypeArguments="x:String" Name="EmailBody" />
+      <Variable x:TypeArguments="x:String" Name="ApprovalCustomer" />
+      <Variable x:TypeArguments="x:String" Name="ApprovalAmount" />
+      <Variable x:TypeArguments="x:String" Name="ApprovalRecommendation" />
+      <Variable x:TypeArguments="x:String" Name="ApproverEmailFromBody" Default="[&quot;daniela.rosenstein@catonetworks.com&quot;]" />
+      <Variable x:TypeArguments="x:String" Name="BodyWithTaskId" />
+      <Variable x:TypeArguments="ui:CurrentJobInfo" Name="v_JobInfo" />
+      <Variable x:TypeArguments="upae:ExternalTaskData" Name="v_TaskObject" />
+      <Variable x:TypeArguments="upamt:TaskData" Name="v_GetTaskObj" />
+      <Variable x:TypeArguments="x:String" Name="v_TaskAction" />
+      <Variable x:TypeArguments="x:String" Name="v_Decision" Default="[&quot;pending&quot;]" />
+      <Variable x:TypeArguments="x:String" Name="v_DecisionComments" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+
+    <!-- Step 1: Extract title and approver email from body before any API calls -->
+    <ui:InvokeCode ContinueOnError="True" DisplayName="Extract Title and Approver Email from Body" sap2010:WorkflowViewState.IdRef="InvokeCode_ExtractTitleEmail"
+      Code="Dim title As String = &quot;Deal Desk Approval&quot;&#xA;Dim approverAddr As String = &quot;daniela.rosenstein@catonetworks.com&quot;&#xA;Try&#xA;    If Not String.IsNullOrWhiteSpace(in_BodyJson) Then&#xA;        Dim body = Newtonsoft.Json.Linq.JObject.Parse(in_BodyJson)&#xA;        If body(&quot;title&quot;) IsNot Nothing Then&#xA;            title = body(&quot;title&quot;).ToString()&#xA;        End If&#xA;        Dim approvers = TryCast(body(&quot;approvers&quot;), Newtonsoft.Json.Linq.JArray)&#xA;        If approvers IsNot Nothing AndAlso approvers.Count &gt; 0 Then&#xA;            Dim first = TryCast(approvers(0), Newtonsoft.Json.Linq.JObject)&#xA;            If first IsNot Nothing AndAlso first(&quot;email&quot;) IsNot Nothing Then&#xA;                Dim addr = first(&quot;email&quot;).ToString().Trim()&#xA;                If addr.Contains(&quot;@&quot;) Then approverAddr = addr&#xA;            End If&#xA;        End If&#xA;    End If&#xA;Catch ex As Exception&#xA;End Try&#xA;out_Title = title&#xA;out_ApproverEmail = approverAddr">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_BodyJson">[in_ApprovalBodyJson]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_Title">[ApprovalTitle]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_ApproverEmail">[ApproverEmailFromBody]</OutArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+
+    <!-- Step 2: Normalize HITL request inputs -->
+    <ui:InvokeCode ContinueOnError="False" DisplayName="Normalize HITL Request Inputs" sap2010:WorkflowViewState.IdRef="InvokeCode_NormalizeHitlInputs"
+      Code="Dim bodyObj As Newtonsoft.Json.Linq.JObject&#xA;Try&#xA;    If String.IsNullOrWhiteSpace(in_ApprovalBodyJson) Then&#xA;        bodyObj = New Newtonsoft.Json.Linq.JObject()&#xA;    Else&#xA;        bodyObj = Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)&#xA;    End If&#xA;Catch ex As Exception&#xA;    bodyObj = New Newtonsoft.Json.Linq.JObject()&#xA;End Try&#xA;If bodyObj(&quot;processId&quot;) Is Nothing Then bodyObj(&quot;processId&quot;) = &quot;DealDeskApproval&quot;&#xA;If bodyObj(&quot;process_id&quot;) Is Nothing Then bodyObj(&quot;process_id&quot;) = &quot;DealDeskApproval&quot;&#xA;If bodyObj(&quot;title&quot;) Is Nothing Then bodyObj(&quot;title&quot;) = If(String.IsNullOrWhiteSpace(in_DefaultTitle), &quot;Deal Desk Approval&quot;, in_DefaultTitle)&#xA;If bodyObj(&quot;approvalType&quot;) Is Nothing Then bodyObj(&quot;approvalType&quot;) = &quot;sequential&quot;&#xA;If bodyObj(&quot;approval_type&quot;) Is Nothing Then bodyObj(&quot;approval_type&quot;) = &quot;sequential&quot;&#xA;Dim approvers = TryCast(bodyObj(&quot;approvers&quot;), Newtonsoft.Json.Linq.JArray)&#xA;If approvers Is Nothing OrElse approvers.Count = 0 Then&#xA;    bodyObj(&quot;approvers&quot;) = New Newtonsoft.Json.Linq.JArray(New Newtonsoft.Json.Linq.JObject(New Newtonsoft.Json.Linq.JProperty(&quot;email&quot;, &quot;daniela.rosenstein@catonetworks.com&quot;), New Newtonsoft.Json.Linq.JProperty(&quot;name&quot;, &quot;Daniela Rosenstein&quot;), New Newtonsoft.Json.Linq.JProperty(&quot;sequenceOrder&quot;, 1), New Newtonsoft.Json.Linq.JProperty(&quot;notificationChannel&quot;, &quot;both&quot;), New Newtonsoft.Json.Linq.JProperty(&quot;notification_channel&quot;, &quot;both&quot;)))&#xA;End If&#xA;If bodyObj(&quot;formData&quot;) Is Nothing Then bodyObj(&quot;formData&quot;) = New Newtonsoft.Json.Linq.JObject()&#xA;Dim formDataObj = TryCast(bodyObj(&quot;formData&quot;), Newtonsoft.Json.Linq.JObject)&#xA;If formDataObj IsNot Nothing AndAlso formDataObj(&quot;approval_id&quot;) Is Nothing Then formDataObj(&quot;approval_id&quot;) = &quot;AUTO-&quot; &amp; Guid.NewGuid().ToString(&quot;N&quot;)&#xA;out_ApprovalBodyJson = bodyObj.ToString(Newtonsoft.Json.Formatting.None)&#xA;out_ApiUrl = If(String.IsNullOrWhiteSpace(in_ApiUrl), &quot;https://djun97l419cdy.cloudfront.net&quot;, in_ApiUrl).Trim()&#xA;out_ApiKey = If(String.IsNullOrWhiteSpace(in_ApiKey), &quot;hitl_test_api_key_12345&quot;, in_ApiKey).Trim()">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApprovalBodyJson">[in_ApprovalBodyJson]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_DefaultTitle">[ApprovalTitle]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApiKey">[in_HitlApiKey]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApiUrl">[in_HitlApiUrl]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_ApprovalBodyJson">[SanitizedApprovalBodyJson]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_ApiKey">[HitlApiKeyEffective]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_ApiUrl">[HitlApiUrlEffective]</OutArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+
+    <!-- Step 3: Get current job info for task correlation -->
+    <ui:GetCurrentJobInfo DisplayName="Get Current Job Info" sap2010:WorkflowViewState.IdRef="GetCurrentJobInfo_1" Result="[v_JobInfo]" />
+    <ui:LogMessage DisplayName="Log: Job Info" sap2010:WorkflowViewState.IdRef="Log_JobInfo" Level="Info" Message="[&quot;WaitDecision started. Job key: &quot; &amp; If(v_JobInfo IsNot Nothing, v_JobInfo.Key.ToString(), &quot;N/A&quot;) &amp; &quot; Approver: &quot; &amp; ApproverEmailFromBody]" />
+
+    <!-- Step 4: Create Action Center External Task (requires "DealDesk Approval" task catalog to exist in Orchestrator) -->
+    <TryCatch DisplayName="Try: Create Action Center Task" sap2010:WorkflowViewState.IdRef="TryCatch_CreateTask">
+      <TryCatch.Try>
+        <upae:CreateExternalTask ExternalTag="{x:Null}" TimeoutMs="{x:Null}" DisplayName="Create External Task (Action Center)" FolderPath="Shared/DealDeskApprovalGlobal" sap2010:WorkflowViewState.IdRef="CreateExternalTask_1" TaskCatalog="Deal Desk" TaskOutput="[v_TaskObject]" TaskPriority="Medium" TaskTitle="[&quot;Deal Desk Approval: &quot; &amp; ApprovalTitle]">
+          <upae:CreateExternalTask.TaskData>
+            <InArgument x:TypeArguments="x:String" x:Key="job_key">[If(v_JobInfo IsNot Nothing, v_JobInfo.Key.ToString(), &quot;&quot;)]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="approval_title">[ApprovalTitle]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="approver_email">[ApproverEmailFromBody]</InArgument>
+          </upae:CreateExternalTask.TaskData>
+        </upae:CreateExternalTask>
+      </TryCatch.Try>
+      <TryCatch.Catches>
+        <Catch x:TypeArguments="sys:Exception">
+          <ActivityAction x:TypeArguments="sys:Exception">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="sys:Exception" Name="ex_CreateTask" />
+            </ActivityAction.Argument>
+            <ui:LogMessage DisplayName="Log: Action Center Task Catalog Missing (non-fatal)" sap2010:WorkflowViewState.IdRef="Log_CatalogMissing" Level="Warn" Message="[&quot;Action Center task catalog 'DealDesk Approval' not found in Shared/DealDeskApprovalGlobal. Create it in Orchestrator UI > Action Center > Task Catalogs. Error: &quot; &amp; ex_CreateTask.Message]" />
+          </ActivityAction>
+        </Catch>
+      </TryCatch.Catches>
+    </TryCatch>
+    <ui:LogMessage DisplayName="Log: Action Center Task Status" sap2010:WorkflowViewState.IdRef="Log_TaskCreated" Level="Info" Message="[If(v_TaskObject IsNot Nothing AndAlso v_TaskObject.Id.HasValue, &quot;Action Center task created. TaskId: &quot; &amp; v_TaskObject.Id.Value.ToString(), &quot;Action Center task not created (catalog missing) - continuing with HITL API only&quot;)]" />
+
+    <!-- Step 5: Inject orchestrator_task_id and job key into HITL body -->
+    <ui:InvokeCode ContinueOnError="True" DisplayName="Inject Task ID into HITL Body" sap2010:WorkflowViewState.IdRef="InvokeCode_InjectTaskId"
+      Code="Dim result As String = in_Body&#xA;Try&#xA;    Dim bodyObj = Newtonsoft.Json.Linq.JObject.Parse(in_Body)&#xA;    If in_TaskId &gt; 0 Then&#xA;        bodyObj(&quot;orchestrator_task_id&quot;) = in_TaskId&#xA;    End If&#xA;    bodyObj(&quot;orchestrator_job_key&quot;) = in_JobKey&#xA;    bodyObj(&quot;orchestratorFolderId&quot;) = CLng(in_FolderId)&#xA;    bodyObj(&quot;orchestrator_folder_id&quot;) = CLng(in_FolderId)&#xA;    bodyObj(&quot;orchestrator_process_key&quot;) = If(bodyObj(&quot;orchestrator_process_key&quot;) Is Nothing, New Newtonsoft.Json.Linq.JValue(&quot;DealDeskApproval&quot;), bodyObj(&quot;orchestrator_process_key&quot;))&#xA;    result = bodyObj.ToString(Newtonsoft.Json.Formatting.None)&#xA;Catch ex As Exception&#xA;End Try&#xA;out_Body = result">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Body">[If(String.IsNullOrWhiteSpace(SanitizedApprovalBodyJson), If(String.IsNullOrWhiteSpace(in_ApprovalBodyJson), &quot;{}&quot;, in_ApprovalBodyJson), SanitizedApprovalBodyJson)]</InArgument>
+        <InArgument x:TypeArguments="x:Int64" x:Key="in_TaskId">[If(v_TaskObject IsNot Nothing AndAlso v_TaskObject.Id.HasValue, CLng(v_TaskObject.Id.Value), 0L)]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_JobKey">[If(v_JobInfo IsNot Nothing, v_JobInfo.Key.ToString(), &quot;&quot;)]</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_FolderId">[in_OrchestratorFolderId]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_Body">[BodyWithTaskId]</OutArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+
+    <!-- Step 6: POST to HITL API to create approval -->
+    <ui:LogMessage DisplayName="Log: Creating HITL Approval" sap2010:WorkflowViewState.IdRef="Log_PrePost" Level="Info" Message="[&quot;POSTing to HITL API. Title: &quot; &amp; ApprovalTitle &amp; &quot; Approver: &quot; &amp; ApproverEmailFromBody]" />
+    <ui:InvokeCode ContinueOnError="False" DisplayName="POST to HITL API /api/v1/approvals" sap2010:WorkflowViewState.IdRef="InvokeCode_HitlPost"
+      Code="Dim baseUrl As String = If(String.IsNullOrWhiteSpace(in_ApiUrl), &quot;https://djun97l419cdy.cloudfront.net&quot;, in_ApiUrl).Trim().TrimEnd(&quot;/&quot;c)&#xA;Dim apiUrl As String = If(baseUrl.ToLowerInvariant().EndsWith(&quot;/api/v1/approvals&quot;), baseUrl, baseUrl &amp; &quot;/api/v1/approvals&quot;)&#xA;Dim apiKey As String = If(String.IsNullOrWhiteSpace(in_ApiKey), &quot;hitl_test_api_key_12345&quot;, in_ApiKey).Trim()&#xA;Dim raw As String = If(String.IsNullOrWhiteSpace(in_BodyJson), &quot;{}&quot;, in_BodyJson)&#xA;Dim capturedUrl As String = apiUrl&#xA;Dim capturedKey As String = apiKey&#xA;Dim capturedRaw As String = raw&#xA;Dim httpTask = System.Threading.Tasks.Task.Run(Function() As String&#xA;    Using innerClient As New System.Net.Http.HttpClient()&#xA;        innerClient.Timeout = System.TimeSpan.FromSeconds(25)&#xA;        innerClient.DefaultRequestHeaders.TryAddWithoutValidation(&quot;x-api-key&quot;, capturedKey)&#xA;        innerClient.DefaultRequestHeaders.TryAddWithoutValidation(&quot;Accept&quot;, &quot;application/json&quot;)&#xA;        Dim httpContent As New System.Net.Http.StringContent(capturedRaw, System.Text.Encoding.UTF8, &quot;application/json&quot;)&#xA;        Dim resp = innerClient.PostAsync(capturedUrl, httpContent).GetAwaiter().GetResult()&#xA;        Dim respBody As String = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult()&#xA;        Return If(Not String.IsNullOrWhiteSpace(respBody), respBody, &quot;HITL_POST_ERROR:HTTP_&quot; &amp; CInt(resp.StatusCode).ToString() &amp; &quot;_EmptyBody&quot;)&#xA;    End Using&#xA;End Function)&#xA;If Not httpTask.Wait(System.TimeSpan.FromSeconds(30)) Then&#xA;    out_Response = &quot;HITL_EXCEPTION:TimeoutException=HITL POST did not respond within 30 seconds&quot;&#xA;ElseIf httpTask.IsFaulted Then&#xA;    out_Response = &quot;HITL_EXCEPTION:&quot; &amp; httpTask.Exception.InnerException.GetType().Name &amp; &quot;=&quot; &amp; httpTask.Exception.InnerException.Message&#xA;Else&#xA;    out_Response = httpTask.Result&#xA;End If">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApiUrl">[HitlApiUrlEffective]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApiKey">[HitlApiKeyEffective]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_BodyJson">[BodyWithTaskId]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_Response">[HitlResponseJson]</OutArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+    <ui:LogMessage DisplayName="Log: HITL Response" sap2010:WorkflowViewState.IdRef="Log_HitlResp" Level="Info" Message="[&quot;HITL POST response: &quot; &amp; HitlResponseJson]" />
+
+    <!-- Step 7: Validate HITL response shape -->
+    <ui:InvokeCode ContinueOnError="False" DisplayName="Validate HITL Response Shape" sap2010:WorkflowViewState.IdRef="InvokeCode_ValidateHitlResponse"
+      Code="If String.IsNullOrWhiteSpace(in_ResponseJson) Then Throw New BusinessRuleException(&quot;HITL response is empty. Verify HITL API URL/key and endpoint availability.&quot;)&#xA;If in_ResponseJson.StartsWith(&quot;HITL_EXCEPTION:&quot;) Then Throw New BusinessRuleException(&quot;HITL POST exception: &quot; &amp; in_ResponseJson)&#xA;If in_ResponseJson.StartsWith(&quot;HITL_POST_ERROR:&quot;) Then Throw New BusinessRuleException(&quot;HITL POST failed: &quot; &amp; in_ResponseJson)&#xA;Dim responseObj = Newtonsoft.Json.Linq.JObject.Parse(in_ResponseJson)&#xA;If responseObj(&quot;id&quot;) Is Nothing Then Throw New BusinessRuleException(&quot;HITL response missing field 'id'. Response: &quot; &amp; in_ResponseJson)&#xA;Dim approvalLines = TryCast(responseObj(&quot;approvalLines&quot;), Newtonsoft.Json.Linq.JArray)&#xA;If approvalLines Is Nothing OrElse approvalLines.Count = 0 Then Throw New BusinessRuleException(&quot;HITL response missing 'approvalLines'. Response: &quot; &amp; in_ResponseJson)&#xA;Dim firstLine = approvalLines(0)&#xA;If firstLine(&quot;responseToken&quot;) Is Nothing Then Throw New BusinessRuleException(&quot;HITL response missing 'approvalLines[0].responseToken'. Response: &quot; &amp; in_ResponseJson)">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ResponseJson">[HitlResponseJson]</InArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+
+    <!-- Step 8: Extract fields from HITL response -->
+    <Assign DisplayName="Extract HITL ApprovalId" sap2010:WorkflowViewState.IdRef="Assign_HitlApprovalId">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[HitlApprovalId]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[JObject.Parse(HitlResponseJson)("id").ToString()]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Extract ResponseToken" sap2010:WorkflowViewState.IdRef="Assign_ResponseToken">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[HitlResponseToken]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[JObject.Parse(HitlResponseJson)("approvalLines")(0)("responseToken").ToString()]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Extract ApproverEmail from HITL Response" sap2010:WorkflowViewState.IdRef="Assign_ApproverEmail">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[HitlApproverEmail]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(JObject.Parse(HitlResponseJson)("approvalLines")(0)("approverEmail") IsNot Nothing, JObject.Parse(HitlResponseJson)("approvalLines")(0)("approverEmail").ToString(), ApproverEmailFromBody)]</InArgument>
+      </Assign.Value>
+    </Assign>
+
+    <!-- Step 9: Extract form data for email display -->
+    <Assign DisplayName="Extract Customer" sap2010:WorkflowViewState.IdRef="Assign_Customer">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[ApprovalCustomer]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso JObject.Parse(in_ApprovalBodyJson)("formData") IsNot Nothing AndAlso JObject.Parse(in_ApprovalBodyJson)("formData")("customer") IsNot Nothing, JObject.Parse(in_ApprovalBodyJson)("formData")("customer").ToString(), "")]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Extract Amount" sap2010:WorkflowViewState.IdRef="Assign_Amount">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[ApprovalAmount]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso JObject.Parse(in_ApprovalBodyJson)("formData") IsNot Nothing AndAlso JObject.Parse(in_ApprovalBodyJson)("formData")("amount") IsNot Nothing, JObject.Parse(in_ApprovalBodyJson)("formData")("amount").ToString(), "")]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Extract RecommendedDecision" sap2010:WorkflowViewState.IdRef="Assign_Recommendation">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[ApprovalRecommendation]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso JObject.Parse(in_ApprovalBodyJson)("formData") IsNot Nothing AndAlso JObject.Parse(in_ApprovalBodyJson)("formData")("recommended_decision") IsNot Nothing, JObject.Parse(in_ApprovalBodyJson)("formData")("recommended_decision").ToString(), "")]</InArgument>
+      </Assign.Value>
+    </Assign>
+
+    <!-- Step 10: Build email body with correct form URL (not direct GET respond link) -->
+    <ui:InvokeCode ContinueOnError="False" DisplayName="Build Email Body (Form URL)" sap2010:WorkflowViewState.IdRef="InvokeCode_BuildEmail"
+      Code="Dim baseUrl As String = If(String.IsNullOrWhiteSpace(in_HitlBaseUrl), &quot;https://djun97l419cdy.cloudfront.net&quot;, in_HitlBaseUrl).Trim().TrimEnd(&quot;/&quot;c)&#xA;Dim respondUrl As String = baseUrl &amp; &quot;/api/v1/approvals/adaptive-card/&quot; &amp; Uri.EscapeDataString(in_ResponseToken)&#xA;Dim bodyJson As String = &quot;&quot;&#xA;Try&#xA;    Dim jo = Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)&#xA;    Dim fd = TryCast(jo(&quot;formData&quot;), Newtonsoft.Json.Linq.JObject)&#xA;    Dim approversArr = TryCast(jo(&quot;approvers&quot;), Newtonsoft.Json.Linq.JArray)&#xA;    Dim approverName As String = If(approversArr IsNot Nothing AndAlso approversArr.Count &gt; 0 AndAlso approversArr(0)(&quot;name&quot;) IsNot Nothing, approversArr(0)(&quot;name&quot;).ToString(), &quot;&quot;)&#xA;    Dim customer As String = If(fd IsNot Nothing AndAlso fd(&quot;customer&quot;) IsNot Nothing, fd(&quot;customer&quot;).ToString(), &quot;N/A&quot;)&#xA;    Dim amount As String = If(fd IsNot Nothing AndAlso fd(&quot;amount&quot;) IsNot Nothing, fd(&quot;amount&quot;).ToString(), &quot;N/A&quot;)&#xA;    Dim discount As String = If(fd IsNot Nothing AndAlso fd(&quot;discount&quot;) IsNot Nothing, fd(&quot;discount&quot;).ToString(), &quot;N/A&quot;)&#xA;    Dim recommendation As String = If(Not String.IsNullOrWhiteSpace(in_RecommendedDecision), in_RecommendedDecision, &quot;review&quot;)&#xA;    Dim rationale As String = If(fd IsNot Nothing AndAlso fd(&quot;rationale&quot;) IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(fd(&quot;rationale&quot;).ToString()), fd(&quot;rationale&quot;).ToString(), &quot;N/A&quot;)&#xA;    Dim requester As String = If(fd IsNot Nothing AndAlso fd(&quot;requester&quot;) IsNot Nothing, fd(&quot;requester&quot;).ToString(), &quot;&quot;)&#xA;    Dim approvalId As String = If(fd IsNot Nothing AndAlso fd(&quot;approval_id&quot;) IsNot Nothing, fd(&quot;approval_id&quot;).ToString(), in_HitlApprovalId)&#xA;    Dim custSafe As String = customer.Replace(&quot;&quot;&quot;&quot;, &quot; &quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;    Dim ratSafe As String = rationale.Replace(&quot;&quot;&quot;&quot;, &quot; &quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;    Dim churnRisk As String = If(fd IsNot Nothing AndAlso fd(&quot;churn_risk&quot;) IsNot Nothing, fd(&quot;churn_risk&quot;).ToString(), &quot;&quot;)&#xA;    Dim custTier As String = If(fd IsNot Nothing AndAlso fd(&quot;customer_tier&quot;) IsNot Nothing, fd(&quot;customer_tier&quot;).ToString(), &quot;&quot;)&#xA;    Dim healthSc As String = If(fd IsNot Nothing AndAlso fd(&quot;health_score&quot;) IsNot Nothing, fd(&quot;health_score&quot;).ToString(), &quot;&quot;)&#xA;    Dim renewTerm As String = If(fd IsNot Nothing AndAlso fd(&quot;renewal_term_months&quot;) IsNot Nothing, fd(&quot;renewal_term_months&quot;).ToString(), &quot;&quot;)&#xA;    Dim compInv As String = If(fd IsNot Nothing AndAlso fd(&quot;competitor_involved&quot;) IsNot Nothing, fd(&quot;competitor_involved&quot;).ToString(), &quot;&quot;)&#xA;    Dim churnSafe As String = churnRisk.Replace(&quot;&quot;&quot;&quot;, &quot; &quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;    Dim tierSafe As String = custTier.Replace(&quot;&quot;&quot;&quot;, &quot; &quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;    Dim healthSafe As String = healthSc.Replace(&quot;&quot;&quot;&quot;, &quot; &quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;    Dim termSafe As String = renewTerm.Replace(&quot;&quot;&quot;&quot;, &quot; &quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;    Dim compSafe As String = compInv.Replace(&quot;&quot;&quot;&quot;, &quot; &quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;    Dim approveBody As String = ChrW(123) &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;action&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;approved&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;,&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;responseData&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:{&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;comments&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;{{comments.value}}&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;}}&quot;&#xA;    Dim rejectBody As String = ChrW(123) &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;action&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;rejected&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;,&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;responseData&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:{&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;comments&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;{{comments.value}}&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;}}&quot;&#xA;    Dim requestInfoBody As String = ChrW(123) &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;action&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;request_info&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;,&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;responseData&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:{&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;comments&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;:&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;{{comments.value}}&quot; &amp; ChrW(92) &amp; ChrW(34) &amp; &quot;}}&quot;&#xA;    Dim headerJson As String = &quot;[{&quot;&quot;name&quot;&quot;:&quot;&quot;Content-Type&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;application/json&quot;&quot;}]&quot;&#xA;    Dim sb As New System.Text.StringBuilder()&#xA;    sb.AppendLine(&quot;&lt;html&gt;&quot;)&#xA;    sb.AppendLine(&quot;&lt;head&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;meta http-equiv=&quot;&quot;Content-Type&quot;&quot; content=&quot;&quot;text/html; charset=utf-8&quot;&quot;&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;script type=&quot;&quot;application/adaptivecard+json&quot;&quot;&gt;&quot;)&#xA;    sb.AppendLine(&quot;{&quot;)&#xA;    sb.AppendLine(&quot;  &quot;&quot;type&quot;&quot;: &quot;&quot;AdaptiveCard&quot;&quot;,&quot;)&#xA;    sb.AppendLine(&quot;  &quot;&quot;$schema&quot;&quot;: &quot;&quot;http://adaptivecards.io/schemas/adaptive-card.json&quot;&quot;,&quot;)&#xA;    sb.AppendLine(&quot;  &quot;&quot;version&quot;&quot;: &quot;&quot;1.0&quot;&quot;,&quot;)&#xA;    sb.AppendLine(&quot;  &quot;&quot;originator&quot;&quot;: &quot;&quot;61fed71d-3b8c-4605-8f35-d95b70ab0803&quot;&quot;,&quot;)&#xA;    sb.AppendLine(&quot;  &quot;&quot;hideOriginalBody&quot;&quot;: false,&quot;)&#xA;    sb.AppendLine(&quot;  &quot;&quot;body&quot;&quot;: [&quot;)&#xA;    sb.AppendLine(&quot;    {&quot;&quot;type&quot;&quot;:&quot;&quot;TextBlock&quot;&quot;,&quot;&quot;size&quot;&quot;:&quot;&quot;Large&quot;&quot;,&quot;&quot;weight&quot;&quot;:&quot;&quot;Bolder&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;Deal Desk Request - Approval Needed&quot;&quot;,&quot;&quot;wrap&quot;&quot;:true},&quot;)&#xA;    sb.AppendLine(&quot;    {&quot;&quot;type&quot;&quot;:&quot;&quot;FactSet&quot;&quot;,&quot;&quot;facts&quot;&quot;:[&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Customer&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; custSafe &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Amount&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;$&quot; &amp; amount &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Discount&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; discount &amp; &quot;%&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Recommendation&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; recommendation &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Rationale&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; ratSafe &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Approver&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; approverName &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Churn risk&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; churnSafe &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Customer tier&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; tierSafe &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Health score&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; healthSafe &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Renewal term (mo)&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; termSafe &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Competitor&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; compSafe &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;      {&quot;&quot;title&quot;&quot;:&quot;&quot;Approval ID&quot;&quot;,&quot;&quot;value&quot;&quot;:&quot;&quot;&quot; &amp; approvalId &amp; &quot;&quot;&quot;}&quot;)&#xA;    sb.AppendLine(&quot;    ]},&quot;)&#xA;    sb.AppendLine(&quot;    {&quot;&quot;type&quot;&quot;:&quot;&quot;Input.Text&quot;&quot;,&quot;&quot;id&quot;&quot;:&quot;&quot;comments&quot;&quot;,&quot;&quot;placeholder&quot;&quot;:&quot;&quot;Add your comments...&quot;&quot;,&quot;&quot;isMultiline&quot;&quot;:true}&quot;)&#xA;    sb.AppendLine(&quot;  ],&quot;)&#xA;    sb.AppendLine(&quot;  &quot;&quot;actions&quot;&quot;: [&quot;)&#xA;    sb.AppendLine(&quot;    {&quot;&quot;type&quot;&quot;:&quot;&quot;Action.Http&quot;&quot;,&quot;&quot;title&quot;&quot;:&quot;&quot;Approve&quot;&quot;,&quot;&quot;style&quot;&quot;:&quot;&quot;positive&quot;&quot;,&quot;&quot;method&quot;&quot;:&quot;&quot;POST&quot;&quot;,&quot;&quot;url&quot;&quot;:&quot;&quot;&quot; &amp; respondUrl &amp; &quot;&quot;&quot;,&quot;&quot;headers&quot;&quot;:&quot; &amp; headerJson &amp; &quot;,&quot;&quot;body&quot;&quot;:&quot;&quot;&quot; &amp; approveBody &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;    {&quot;&quot;type&quot;&quot;:&quot;&quot;Action.Http&quot;&quot;,&quot;&quot;title&quot;&quot;:&quot;&quot;Reject&quot;&quot;,&quot;&quot;style&quot;&quot;:&quot;&quot;destructive&quot;&quot;,&quot;&quot;method&quot;&quot;:&quot;&quot;POST&quot;&quot;,&quot;&quot;url&quot;&quot;:&quot;&quot;&quot; &amp; respondUrl &amp; &quot;&quot;&quot;,&quot;&quot;headers&quot;&quot;:&quot; &amp; headerJson &amp; &quot;,&quot;&quot;body&quot;&quot;:&quot;&quot;&quot; &amp; rejectBody &amp; &quot;&quot;&quot;},&quot;)&#xA;    sb.AppendLine(&quot;    {&quot;&quot;type&quot;&quot;:&quot;&quot;Action.Http&quot;&quot;,&quot;&quot;title&quot;&quot;:&quot;&quot;Request Info&quot;&quot;,&quot;&quot;method&quot;&quot;:&quot;&quot;POST&quot;&quot;,&quot;&quot;url&quot;&quot;:&quot;&quot;&quot; &amp; respondUrl &amp; &quot;&quot;&quot;,&quot;&quot;headers&quot;&quot;:&quot; &amp; headerJson &amp; &quot;,&quot;&quot;body&quot;&quot;:&quot;&quot;&quot; &amp; requestInfoBody &amp; &quot;&quot;&quot;}&quot;)&#xA;    sb.AppendLine(&quot;  ]&quot;)&#xA;    sb.AppendLine(&quot;}&quot;)&#xA;    sb.AppendLine(&quot;  &lt;/script&gt;&quot;)&#xA;    sb.AppendLine(&quot;&lt;/head&gt;&quot;)&#xA;    sb.AppendLine(&quot;&lt;body&gt;&quot;)&#xA;    sb.AppendLine(&quot;&lt;div style=&quot;&quot;font-family:Segoe UI,Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;&quot;&quot;&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;div style=&quot;&quot;background:#1E3A8A;padding:18px 22px;&quot;&quot;&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;div style=&quot;&quot;color:#BFDBFE;font-size:11px;text-transform:uppercase;letter-spacing:.5px;&quot;&quot;&gt;Deal Desk &amp;middot; Approval Request&lt;/div&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;div style=&quot;&quot;color:#fff;font-size:20px;font-weight:700;margin-top:4px;&quot;&quot;&gt;Action Required&lt;/div&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;/div&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;div style=&quot;&quot;padding:20px 22px;&quot;&quot;&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;table style=&quot;&quot;width:100%;border-collapse:collapse;&quot;&quot;&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;width:130px;&quot;&quot;&gt;Customer&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:14px;font-weight:600;&quot;&quot;&gt;&quot; &amp; custSafe &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Amount&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:14px;&quot;&quot;&gt;$&quot; &amp; amount &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Discount&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#DC2626;font-size:14px;font-weight:600;&quot;&quot;&gt;&quot; &amp; discount &amp; &quot;%&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Recommendation&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#059669;font-size:14px;font-weight:600;&quot;&quot;&gt;&quot; &amp; recommendation &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Rationale&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#334155;font-size:13px;line-height:1.4;&quot;&quot;&gt;&quot; &amp; ratSafe &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Approver&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:13px;&quot;&quot;&gt;&quot; &amp; approverName &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Churn risk&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:13px;&quot;&quot;&gt;&quot; &amp; churnSafe &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Customer tier&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:13px;&quot;&quot;&gt;&quot; &amp; tierSafe &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Health score&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:13px;&quot;&quot;&gt;&quot; &amp; healthSafe &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Renewal term (mo)&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:13px;&quot;&quot;&gt;&quot; &amp; termSafe &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Competitor&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:13px;&quot;&quot;&gt;&quot; &amp; compSafe &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    If Not String.IsNullOrWhiteSpace(requester) Then sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#64748B;font-size:13px;&quot;&quot;&gt;Requester&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#0F172A;font-size:13px;&quot;&quot;&gt;&quot; &amp; requester &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;    &lt;tr&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#94A3B8;font-size:12px;&quot;&quot;&gt;Approval ID&lt;/td&gt;&lt;td style=&quot;&quot;padding:6px 0;color:#94A3B8;font-size:12px;&quot;&quot;&gt;&quot; &amp; approvalId &amp; &quot;&lt;/td&gt;&lt;/tr&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;/table&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;p style=&quot;&quot;color:#94A3B8;font-size:12px;margin-top:16px;&quot;&quot;&gt;Open in Outlook to use the interactive &lt;b&gt;Approve / Reject / Request Info&lt;/b&gt; buttons above.&lt;/p&gt;&quot;)&#xA;    sb.AppendLine(&quot;  &lt;/div&gt;&quot;)&#xA;    sb.AppendLine(&quot;&lt;/div&gt;&quot;)&#xA;    sb.AppendLine(&quot;&lt;/body&gt;&quot;)&#xA;    sb.AppendLine(&quot;&lt;/html&gt;&quot;)&#xA;    bodyJson = sb.ToString()&#xA;Catch ex As Exception&#xA;    bodyJson = &quot;&lt;html&gt;&lt;body&gt;&lt;p&gt;Approval request: &quot; &amp; in_HitlApprovalId &amp; &quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;&#xA;End Try&#xA;out_EmailBody = bodyJson">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_HitlBaseUrl">[HitlApiUrlEffective]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ResponseToken">[HitlResponseToken]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApprovalBodyJson">[in_ApprovalBodyJson]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApprovalCustomer">[ApprovalCustomer]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApprovalAmount">[ApprovalAmount]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RecommendedDecision">[ApprovalRecommendation]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_HitlApprovalId">[HitlApprovalId]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_TaskId">[If(v_TaskObject IsNot Nothing AndAlso v_TaskObject.Id.HasValue, v_TaskObject.Id.Value.ToString(), &quot;&quot;)]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_EmailBody">[EmailBody]</OutArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+
+    <!-- Step 11: Send approval email -->
+    <umam:SendMailConnections ArgumentAttachmentPaths="{x:Null}" AttachmentList="{x:Null}" AttachmentPaths="{x:Null}" Attachments="{x:Null}" Bcc="{x:Null}" Cc="{x:Null}" ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" Mailbox="{x:Null}" MailboxBackup="{x:Reference __ReferenceID0}" ReplyTo="{x:Null}" TextBody="{x:Null}" AttachmentInputMode="Existing" AuthScopesInvalid="False" Body="[EmailBody]" ConnectionId="45b3022f-96ef-4ca4-99bb-39f15af717d5" DisplayName="Send Approval Email" sap2010:WorkflowViewState.IdRef="SendMail_Approval" Importance="Normal" InputType="HTML" SaveAsDraft="False" Subject="[&quot;Deal Desk Request - Approval Needed&quot;]" To="[New List(Of String) From {HitlApproverEmail}]" UseConnectionService="True" UseSharedMailbox="False">
+      <umam:SendMailConnections.AttachmentsBackup>
+        <usau:BackupSlot x:TypeArguments="umame:AttachmentInputMode" StoredValue="Existing">
+          <usau:BackupSlot.BackupValues>
+            <scg:Dictionary x:TypeArguments="umame:AttachmentInputMode, scg:List(x:Object)" />
+          </usau:BackupSlot.BackupValues>
+        </usau:BackupSlot>
+      </umam:SendMailConnections.AttachmentsBackup>
+      <umam:SendMailConnections.InputTypeBackup>
+        <usau:BackupSlot x:TypeArguments="umame:BodyInputType" StoredValue="HTML">
+          <usau:BackupSlot.BackupValues>
+            <scg:Dictionary x:TypeArguments="umame:BodyInputType, scg:List(x:Object)" />
+          </usau:BackupSlot.BackupValues>
+        </usau:BackupSlot>
+      </umam:SendMailConnections.InputTypeBackup>
+      <umam:SendMailConnections.MailboxArg>
+        <umamm:MailboxArgument SharedMailbox="{x:Null}" UseSharedMailbox="False">
+          <umamm:MailboxArgument.Backup>
+            <usau:BackupSlot x:TypeArguments="umame:MailboxSelectionMode" x:Name="__ReferenceID0" StoredValue="NoMailbox">
+              <usau:BackupSlot.BackupValues>
+                <scg:Dictionary x:TypeArguments="umame:MailboxSelectionMode, scg:List(x:Object)" />
+              </usau:BackupSlot.BackupValues>
+            </usau:BackupSlot>
+          </umamm:MailboxArgument.Backup>
+        </umamm:MailboxArgument>
+      </umam:SendMailConnections.MailboxArg>
+    </umam:SendMailConnections>
+    <ui:LogMessage DisplayName="Log: Email Sent, Waiting for Action Center Decision" sap2010:WorkflowViewState.IdRef="Log_EmailSent" Level="Info" Message="[&quot;Email sent to &quot; &amp; HitlApproverEmail &amp; &quot;. ApprovalId: &quot; &amp; HitlApprovalId &amp; &quot;. Now waiting for Action Center task completion...&quot;]" />
+
+    <!-- Step 11b: Send Slack DM with same approval data (non-fatal) -->
+    <ui:InvokeCode ContinueOnError="True" DisplayName="Send Slack DM Notification" sap2010:WorkflowViewState.IdRef="InvokeCode_SlackNotify"
+      Code="If String.IsNullOrWhiteSpace(in_Token) Then&#xA;Else&#xA;    Try&#xA;        Dim token As String = in_Token.Trim()&#xA;        Dim email As String = If(String.IsNullOrWhiteSpace(in_Email), &quot;daniela.rosenstein@catonetworks.com&quot;, in_Email.Trim())&#xA;        Dim custSafe As String = in_Customer.Replace(&quot;&quot;&quot;&quot;, &quot;&quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;        Dim ratSafe As String = in_Rationale.Replace(&quot;&quot;&quot;&quot;, &quot;&quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;        Dim userId As String = &quot;&quot;&#xA;        Dim task1 = System.Threading.Tasks.Task.Run(Function() As String&#xA;            Using c As New System.Net.Http.HttpClient()&#xA;                c.Timeout = TimeSpan.FromSeconds(15)&#xA;                c.DefaultRequestHeaders.TryAddWithoutValidation(&quot;Authorization&quot;, &quot;Bearer &quot; &amp; token)&#xA;                Dim r = c.GetAsync(&quot;https://slack.com/api/users.lookupByEmail?email=&quot; &amp; Uri.EscapeDataString(email)).GetAwaiter().GetResult()&#xA;                Return r.Content.ReadAsStringAsync().GetAwaiter().GetResult()&#xA;            End Using&#xA;        End Function)&#xA;        If task1.Wait(18000) AndAlso Not task1.IsFaulted Then&#xA;            Dim j1 = Newtonsoft.Json.Linq.JObject.Parse(task1.Result)&#xA;            If j1(&quot;ok&quot;) IsNot Nothing AndAlso CBool(j1(&quot;ok&quot;)) Then userId = j1(&quot;user&quot;)(&quot;id&quot;).ToString()&#xA;        End If&#xA;        If String.IsNullOrWhiteSpace(userId) Then Exit Try&#xA;        Dim channelId As String = &quot;&quot;&#xA;        Dim openPayload As String = &quot;{&quot;&quot;users&quot;&quot;:&quot;&quot;&quot; &amp; userId &amp; &quot;&quot;&quot;}&quot;&#xA;        Dim task2 = System.Threading.Tasks.Task.Run(Function() As String&#xA;            Using c As New System.Net.Http.HttpClient()&#xA;                c.Timeout = TimeSpan.FromSeconds(15)&#xA;                c.DefaultRequestHeaders.TryAddWithoutValidation(&quot;Authorization&quot;, &quot;Bearer &quot; &amp; token)&#xA;                Dim content = New System.Net.Http.StringContent(openPayload, System.Text.Encoding.UTF8, &quot;application/json&quot;)&#xA;                Dim r = c.PostAsync(&quot;https://slack.com/api/conversations.open&quot;, content).GetAwaiter().GetResult()&#xA;                Return r.Content.ReadAsStringAsync().GetAwaiter().GetResult()&#xA;            End Using&#xA;        End Function)&#xA;        If task2.Wait(18000) AndAlso Not task2.IsFaulted Then&#xA;            Dim j2 = Newtonsoft.Json.Linq.JObject.Parse(task2.Result)&#xA;            If j2(&quot;ok&quot;) IsNot Nothing AndAlso CBool(j2(&quot;ok&quot;)) Then channelId = j2(&quot;channel&quot;)(&quot;id&quot;).ToString()&#xA;        End If&#xA;        If String.IsNullOrWhiteSpace(channelId) Then Exit Try&#xA;        Dim discountDisplay As String = If(String.IsNullOrWhiteSpace(in_Discount) OrElse in_Discount = &quot;N/A&quot;, in_Discount, in_Discount &amp; &quot;%&quot;)&#xA;        Dim ratDisplay As String = If(String.IsNullOrWhiteSpace(ratSafe) OrElse ratSafe = &quot;N/A&quot;, &quot;_not provided_&quot;, ratSafe)&#xA;        Dim churnS As String = in_ChurnRisk.Replace(&quot;&quot;&quot;&quot;, &quot;&quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;        Dim tierS As String = in_CustTier.Replace(&quot;&quot;&quot;&quot;, &quot;&quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;        Dim healthS As String = in_HealthScore.Replace(&quot;&quot;&quot;&quot;, &quot;&quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;        Dim termS As String = in_RenewalTerm.Replace(&quot;&quot;&quot;&quot;, &quot;&quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;        Dim compS As String = in_CompInvolved.Replace(&quot;&quot;&quot;&quot;, &quot;&quot;).Replace(System.Environment.NewLine, &quot; &quot;)&#xA;        Dim msgPayload As String = &quot;{&quot;&quot;channel&quot;&quot;:&quot;&quot;&quot; &amp; channelId &amp; &quot;&quot;&quot;,&quot;&quot;blocks&quot;&quot;:[&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;header&quot;&quot;,&quot;&quot;text&quot;&quot;:{&quot;&quot;type&quot;&quot;:&quot;&quot;plain_text&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;Deal Desk Request - Approval Needed&quot;&quot;}},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;section&quot;&quot;,&quot;&quot;fields&quot;&quot;:[&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Customer:*\n&quot; &amp; custSafe &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Amount:*\n$&quot; &amp; in_Amount &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Discount:*\n&quot; &amp; discountDisplay &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Recommendation:*\n&quot; &amp; in_Recommendation &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Approver:*\n&quot; &amp; in_Email &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Approval ID:*\n&quot; &amp; in_ApprovalId &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Churn risk:*\n&quot; &amp; churnS &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Customer tier:*\n&quot; &amp; tierS &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Health score:*\n&quot; &amp; healthS &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Renewal term (mo):*\n&quot; &amp; termS &amp; &quot;&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;*Competitor:*\n&quot; &amp; compS &amp; &quot;&quot;&quot;}]},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;section&quot;&quot;,&quot;&quot;text&quot;&quot;:{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;:memo: *Rationale:* &quot; &amp; ratDisplay &amp; &quot;&quot;&quot;}},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;divider&quot;&quot;},&quot; &amp;&#xA;            &quot;{&quot;&quot;type&quot;&quot;:&quot;&quot;section&quot;&quot;,&quot;&quot;text&quot;&quot;:{&quot;&quot;type&quot;&quot;:&quot;&quot;mrkdwn&quot;&quot;,&quot;&quot;text&quot;&quot;:&quot;&quot;:envelope: Open your *Outlook email* to approve or reject via the interactive card.&quot;&quot;}}]}&quot;&#xA;        Dim task3 = System.Threading.Tasks.Task.Run(Function() As String&#xA;            Using c As New System.Net.Http.HttpClient()&#xA;                c.Timeout = TimeSpan.FromSeconds(15)&#xA;                c.DefaultRequestHeaders.TryAddWithoutValidation(&quot;Authorization&quot;, &quot;Bearer &quot; &amp; token)&#xA;                Dim content = New System.Net.Http.StringContent(msgPayload, System.Text.Encoding.UTF8, &quot;application/json&quot;)&#xA;                Dim r = c.PostAsync(&quot;https://slack.com/api/chat.postMessage&quot;, content).GetAwaiter().GetResult()&#xA;                Return r.Content.ReadAsStringAsync().GetAwaiter().GetResult()&#xA;            End Using&#xA;        End Function)&#xA;        task3.Wait(18000)&#xA;    Catch ex As Exception&#xA;    End Try&#xA;End If">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">[in_SlackBotToken]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Email">[HitlApproverEmail]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Customer">[ApprovalCustomer]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Amount">[ApprovalAmount]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Discount">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso JObject.Parse(in_ApprovalBodyJson)("formData") IsNot Nothing AndAlso JObject.Parse(in_ApprovalBodyJson)("formData")("discount") IsNot Nothing, JObject.Parse(in_ApprovalBodyJson)("formData")("discount").ToString(), "")]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Recommendation">[ApprovalRecommendation]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ApprovalId">[HitlApprovalId]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Rationale">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;) IsNot Nothing AndAlso JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;rationale&quot;) IsNot Nothing, JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;rationale&quot;).ToString(), &quot;&quot;)]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ChurnRisk">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;) IsNot Nothing AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;churn_risk&quot;) IsNot Nothing, Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;churn_risk&quot;).ToString(), &quot;&quot;)]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_CustTier">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;) IsNot Nothing AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;customer_tier&quot;) IsNot Nothing, Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;customer_tier&quot;).ToString(), &quot;&quot;)]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_HealthScore">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;) IsNot Nothing AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;health_score&quot;) IsNot Nothing, Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;health_score&quot;).ToString(), &quot;&quot;)]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RenewalTerm">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;) IsNot Nothing AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;renewal_term_months&quot;) IsNot Nothing, Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;renewal_term_months&quot;).ToString(), &quot;&quot;)]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_CompInvolved">[If(Not String.IsNullOrWhiteSpace(in_ApprovalBodyJson) AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;) IsNot Nothing AndAlso Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;competitor_involved&quot;) IsNot Nothing, Newtonsoft.Json.Linq.JObject.Parse(in_ApprovalBodyJson)(&quot;formData&quot;)(&quot;competitor_involved&quot;).ToString(), &quot;&quot;)]</InArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+
+    <!-- Step 12: Wait for Action Center task completion (only if task was created) -->
+    <If DisplayName="If: Action Center Task Available?" sap2010:WorkflowViewState.IdRef="If_TaskAvailable" Condition="[v_TaskObject IsNot Nothing AndAlso v_TaskObject.Id.HasValue]">
+      <If.Then>
+        <Sequence DisplayName="Wait and Get Task Decision" sap2010:WorkflowViewState.IdRef="Seq_WaitTask">
+          <upae:WaitForExternalTaskAndResume StatusMessage="{x:Null}" TimeoutMs="{x:Null}" WaitItemDataObject="{x:Null}" DisplayName="Wait For External Task and Resume" sap2010:WorkflowViewState.IdRef="WaitForExternalTask_1" TaskAction="[v_TaskAction]" TaskInput="[v_TaskObject]" TaskOutput="[v_TaskObject]" />
+          <ui:LogMessage DisplayName="Log: Task Resumed" sap2010:WorkflowViewState.IdRef="Log_TaskResumed" Level="Info" Message="[&quot;Action Center task completed. TaskAction: &quot; &amp; If(String.IsNullOrWhiteSpace(v_TaskAction), &quot;(none)&quot;, v_TaskAction)]" />
+          <upat:GetTaskData TimeoutMs="{x:Null}" DisplayName="Get Task Data" FolderPath="Shared/DealDeskApprovalGlobal" sap2010:WorkflowViewState.IdRef="GetTaskData_1" TaskId="[v_TaskObject.Id.Value]" TaskOutput="[v_GetTaskObj]" />
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <Sequence DisplayName="Poll HITL API for Decision" sap2010:WorkflowViewState.IdRef="Seq_PollHitl">
+          <ui:LogMessage DisplayName="Log: Polling HITL API" sap2010:WorkflowViewState.IdRef="Log_NoTask" Level="Warn" Message="[&quot;No Action Center task - polling HITL API every 30s for approval. Id: &quot; &amp; HitlApprovalId]" />
+          <ui:InvokeCode ContinueOnError="True" DisplayName="Poll HITL API Until Decision" sap2010:WorkflowViewState.IdRef="InvokeCode_PollHitl"
+            Code="Dim baseUrl As String = If(String.IsNullOrWhiteSpace(in_ApiUrl), &quot;https://djun97l419cdy.cloudfront.net&quot;, in_ApiUrl).Trim().TrimEnd(&quot;/&quot;c)&#xA;baseUrl = If(baseUrl.ToLowerInvariant().EndsWith(&quot;/api/v1/approvals&quot;), baseUrl.Substring(0, baseUrl.Length - &quot;/api/v1/approvals&quot;.Length), baseUrl)&#xA;Dim apiKey As String = If(String.IsNullOrWhiteSpace(in_ApiKey), &quot;&quot;, in_ApiKey).Trim()&#xA;Dim checkUrl As String = baseUrl &amp; &quot;/api/v1/approvals/&quot; &amp; in_ApprovalId&#xA;Dim maxMinutes As Integer = 1440&#xA;Dim intervalSeconds As Integer = 30&#xA;Dim startTime As DateTime = DateTime.Now&#xA;Do&#xA;    System.Threading.Thread.Sleep(intervalSeconds * 1000)&#xA;    Try&#xA;        Using client As New System.Net.Http.HttpClient()&#xA;            client.Timeout = TimeSpan.FromSeconds(30)&#xA;            If Not String.IsNullOrWhiteSpace(apiKey) Then&#xA;                client.DefaultRequestHeaders.TryAddWithoutValidation(&quot;x-api-key&quot;, apiKey)&#xA;            End If&#xA;            Dim resp = client.GetAsync(checkUrl).Result&#xA;            If resp.IsSuccessStatusCode Then&#xA;                Dim body As String = resp.Content.ReadAsStringAsync().Result&#xA;                Dim json = Newtonsoft.Json.Linq.JObject.Parse(body)&#xA;                Dim status As String = json(&quot;status&quot;).ToString().ToLower()&#xA;                If status = &quot;approved&quot; OrElse status = &quot;rejected&quot; OrElse status = &quot;request_info&quot; Then&#xA;                    out_Decision = status&#xA;                    Dim lines = TryCast(json(&quot;approvalLines&quot;), Newtonsoft.Json.Linq.JArray)&#xA;                    If lines IsNot Nothing AndAlso lines.Count &gt; 0 Then&#xA;                        Dim line = TryCast(lines(0), Newtonsoft.Json.Linq.JObject)&#xA;                        If line IsNot Nothing AndAlso line(&quot;responseData&quot;) IsNot Nothing Then&#xA;                            Dim rd = TryCast(line(&quot;responseData&quot;), Newtonsoft.Json.Linq.JObject)&#xA;                            If rd IsNot Nothing AndAlso rd(&quot;comments&quot;) IsNot Nothing Then&#xA;                                out_Comments = rd(&quot;comments&quot;).ToString()&#xA;                            End If&#xA;                        End If&#xA;                    End If&#xA;                    Exit Do&#xA;                End If&#xA;            End If&#xA;        End Using&#xA;    Catch ex As Exception&#xA;    End Try&#xA;Loop While (DateTime.Now - startTime).TotalMinutes &lt; maxMinutes">
+            <ui:InvokeCode.Arguments>
+              <InArgument x:TypeArguments="x:String" x:Key="in_ApiUrl">[HitlApiUrlEffective]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_ApiKey">[HitlApiKeyEffective]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_ApprovalId">[HitlApprovalId]</InArgument>
+              <OutArgument x:TypeArguments="x:String" x:Key="out_Decision">[v_Decision]</OutArgument>
+              <OutArgument x:TypeArguments="x:String" x:Key="out_Comments">[v_DecisionComments]</OutArgument>
+            </ui:InvokeCode.Arguments>
+          </ui:InvokeCode>
+        </Sequence>
+      </If.Else>
+    </If>
+
+    <!-- Step 14: Extract decision and comments from task data -->
+    <ui:InvokeCode ContinueOnError="True" DisplayName="Extract Decision from Task Data" sap2010:WorkflowViewState.IdRef="InvokeCode_ExtractDecision"
+      Code="Dim decision As String = If(Not String.IsNullOrWhiteSpace(in_TaskAction), in_TaskAction.Trim().ToLower(), &quot;escalate&quot;)&#xA;Dim comments As String = &quot;&quot;&#xA;Try&#xA;    If in_TaskObj IsNot Nothing AndAlso in_TaskObj.Data IsNot Nothing Then&#xA;        Dim taskData As Newtonsoft.Json.Linq.JObject&#xA;        If TypeOf in_TaskObj.Data Is Newtonsoft.Json.Linq.JObject Then&#xA;            taskData = CType(in_TaskObj.Data, Newtonsoft.Json.Linq.JObject)&#xA;        Else&#xA;            taskData = Newtonsoft.Json.Linq.JObject.Parse(in_TaskObj.Data.ToString())&#xA;        End If&#xA;        If taskData(&quot;action&quot;) IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(taskData(&quot;action&quot;).ToString()) Then&#xA;            decision = taskData(&quot;action&quot;).ToString().Trim().ToLower()&#xA;        End If&#xA;        If taskData(&quot;comments&quot;) IsNot Nothing Then&#xA;            comments = taskData(&quot;comments&quot;).ToString()&#xA;        ElseIf taskData(&quot;responseData&quot;) IsNot Nothing Then&#xA;            Dim rd = TryCast(taskData(&quot;responseData&quot;), Newtonsoft.Json.Linq.JObject)&#xA;            If rd IsNot Nothing AndAlso rd(&quot;comments&quot;) IsNot Nothing Then comments = rd(&quot;comments&quot;).ToString()&#xA;        End If&#xA;    End If&#xA;Catch ex As Exception&#xA;End Try&#xA;out_Decision = decision&#xA;out_Comments = comments">
+      <ui:InvokeCode.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_TaskAction">[v_TaskAction]</InArgument>
+        <InArgument x:TypeArguments="upamt:TaskData" x:Key="in_TaskObj">[v_GetTaskObj]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_Decision">[v_Decision]</OutArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_Comments">[v_DecisionComments]</OutArgument>
+      </ui:InvokeCode.Arguments>
+    </ui:InvokeCode>
+    <ui:LogMessage DisplayName="Log: Decision Extracted" sap2010:WorkflowViewState.IdRef="Log_Decision" Level="Info" Message="[&quot;Decision: &quot; &amp; v_Decision &amp; &quot; Comments: &quot; &amp; v_DecisionComments]" />
+
+    <!-- Step 15: Set all outputs -->
+    <Assign DisplayName="Set Output: ApprovalId" sap2010:WorkflowViewState.IdRef="Assign_OutApprovalId">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_HitlApprovalId]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[HitlApprovalId]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Set Output: ResponseToken" sap2010:WorkflowViewState.IdRef="Assign_OutToken">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_ResponseToken]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[HitlResponseToken]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Set Output: ApproverEmail" sap2010:WorkflowViewState.IdRef="Assign_OutEmail">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_ApproverEmail]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[HitlApproverEmail]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Set Output: Decision" sap2010:WorkflowViewState.IdRef="Assign_OutDecision">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_Decision]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[v_Decision]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign DisplayName="Set Output: DecisionComments" sap2010:WorkflowViewState.IdRef="Assign_OutComments">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[out_DecisionComments]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[v_DecisionComments]</InArgument>
+      </Assign.Value>
+    </Assign>
+  </Sequence>
+</Activity>

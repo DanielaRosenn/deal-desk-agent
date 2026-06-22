@@ -1,0 +1,261 @@
+{
+  "$defs": {
+    "ApprovalEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "approval_id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "Approval Id",
+          "type": "string"
+        },
+        "event_type": {
+          "enum": [
+            "created",
+            "routing_planned",
+            "card_generated",
+            "card_sent",
+            "card_viewed",
+            "section_expanded",
+            "decision_received",
+            "corrected_by_guardrail",
+            "fell_back_to_safe_mode",
+            "escalated",
+            "sla_breached",
+            "completed",
+            "failed"
+          ],
+          "title": "Event Type",
+          "type": "string"
+        },
+        "event_timestamp": {
+          "format": "date-time",
+          "title": "Event Timestamp",
+          "type": "string"
+        },
+        "approver_id": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approver Id"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        }
+      },
+      "required": [
+        "event_id",
+        "approval_id",
+        "event_type",
+        "event_timestamp"
+      ],
+      "title": "ApprovalEvent",
+      "type": "object"
+    },
+    "ApprovalRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "Approval Id",
+          "type": "string"
+        },
+        "process_type": {
+          "enum": [
+            "rpc",
+            "expense",
+            "access_request",
+            "vendor_onboarding"
+          ],
+          "title": "Process Type",
+          "type": "string"
+        },
+        "source_system": {
+          "enum": [
+            "salesforce",
+            "concur",
+            "okta",
+            "sap",
+            "manual",
+            "concur_computed"
+          ],
+          "title": "Source System",
+          "type": "string"
+        },
+        "source_record_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Source Record Id",
+          "type": "string"
+        },
+        "requester_email": {
+          "format": "email",
+          "title": "Requester Email",
+          "type": "string"
+        },
+        "requester_id": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requester Id"
+        },
+        "raw_payload": {
+          "additionalProperties": true,
+          "title": "Raw Payload",
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "sla_minutes": {
+          "default": 1440,
+          "maximum": 43200,
+          "minimum": 15,
+          "title": "Sla Minutes",
+          "type": "integer"
+        },
+        "config_version_snapshot": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Config Version Snapshot"
+        }
+      },
+      "required": [
+        "approval_id",
+        "process_type",
+        "source_system",
+        "source_record_id",
+        "requester_email",
+        "created_at"
+      ],
+      "title": "ApprovalRequest",
+      "type": "object"
+    },
+    "Approver": {
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "User Id",
+          "type": "string"
+        },
+        "email": {
+          "format": "email",
+          "title": "Email",
+          "type": "string"
+        },
+        "persona": {
+          "enum": [
+            "manager",
+            "director",
+            "vp",
+            "cfo",
+            "legal"
+          ],
+          "title": "Persona",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "Role",
+          "type": "string"
+        },
+        "display_name": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "geo": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Geo"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone"
+        }
+      },
+      "required": [
+        "user_id",
+        "email",
+        "persona",
+        "role",
+        "display_name"
+      ],
+      "title": "Approver",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "request": {
+      "$ref": "#/$defs/ApprovalRequest"
+    },
+    "approver": {
+      "$ref": "#/$defs/Approver"
+    },
+    "history": {
+      "items": {
+        "$ref": "#/$defs/ApprovalEvent"
+      },
+      "title": "History",
+      "type": "array"
+    }
+  },
+  "required": [
+    "request",
+    "approver"
+  ],
+  "title": "RenderInput",
+  "type": "object"
+}

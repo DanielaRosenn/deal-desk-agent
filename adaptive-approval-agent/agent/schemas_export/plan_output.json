@@ -1,0 +1,250 @@
+{
+  "$defs": {
+    "ApprovalRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "Approval Id",
+          "type": "string"
+        },
+        "process_type": {
+          "enum": [
+            "rpc",
+            "expense",
+            "access_request",
+            "vendor_onboarding"
+          ],
+          "title": "Process Type",
+          "type": "string"
+        },
+        "source_system": {
+          "enum": [
+            "salesforce",
+            "concur",
+            "okta",
+            "sap",
+            "manual",
+            "concur_computed"
+          ],
+          "title": "Source System",
+          "type": "string"
+        },
+        "source_record_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Source Record Id",
+          "type": "string"
+        },
+        "requester_email": {
+          "format": "email",
+          "title": "Requester Email",
+          "type": "string"
+        },
+        "requester_id": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requester Id"
+        },
+        "raw_payload": {
+          "additionalProperties": true,
+          "title": "Raw Payload",
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "sla_minutes": {
+          "default": 1440,
+          "maximum": 43200,
+          "minimum": 15,
+          "title": "Sla Minutes",
+          "type": "integer"
+        },
+        "config_version_snapshot": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Config Version Snapshot"
+        }
+      },
+      "required": [
+        "approval_id",
+        "process_type",
+        "source_system",
+        "source_record_id",
+        "requester_email",
+        "created_at"
+      ],
+      "title": "ApprovalRequest",
+      "type": "object"
+    },
+    "Approver": {
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "User Id",
+          "type": "string"
+        },
+        "email": {
+          "format": "email",
+          "title": "Email",
+          "type": "string"
+        },
+        "persona": {
+          "enum": [
+            "manager",
+            "director",
+            "vp",
+            "cfo",
+            "legal"
+          ],
+          "title": "Persona",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "Role",
+          "type": "string"
+        },
+        "display_name": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "geo": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Geo"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone"
+        }
+      },
+      "required": [
+        "user_id",
+        "email",
+        "persona",
+        "role",
+        "display_name"
+      ],
+      "title": "Approver",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "RoutingPlan plus the resolved request echoed back for Var_Request hydration.",
+  "properties": {
+    "approvers": {
+      "items": {
+        "$ref": "#/$defs/Approver"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Approvers",
+      "type": "array"
+    },
+    "rationale": {
+      "maxLength": 1000,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "disposition": {
+      "default": "needs_approval",
+      "enum": [
+        "auto_clear",
+        "needs_approval",
+        "exception"
+      ],
+      "title": "Disposition",
+      "type": "string"
+    },
+    "risk_score": {
+      "default": 0.0,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Risk Score",
+      "type": "number"
+    },
+    "recommended_decision": {
+      "default": "approve",
+      "enum": [
+        "approve",
+        "reject",
+        "request_info",
+        "escalate"
+      ],
+      "title": "Recommended Decision",
+      "type": "string"
+    },
+    "recommendation_rationale": {
+      "default": "",
+      "maxLength": 1000,
+      "title": "Recommendation Rationale",
+      "type": "string"
+    },
+    "guardrail_violations_corrected": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Guardrail Violations Corrected",
+      "type": "array"
+    },
+    "soft_guidance_applied": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Soft Guidance Applied",
+      "type": "array"
+    },
+    "request": {
+      "$ref": "#/$defs/ApprovalRequest"
+    }
+  },
+  "required": [
+    "approvers",
+    "rationale",
+    "request"
+  ],
+  "title": "PlanOutput",
+  "type": "object"
+}

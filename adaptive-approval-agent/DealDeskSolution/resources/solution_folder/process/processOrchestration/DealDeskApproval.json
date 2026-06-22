@@ -1,0 +1,169 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "DealDeskApproval",
+    "kind": "process",
+    "type": "processOrchestration",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "4f04eb81-7e0f-49a9-b68c-7e6cbe2af3d4",
+    "isOverridable": true,
+    "dependencies": [
+      {
+        "name": "DealDeskApproval",
+        "kind": "package"
+      }
+    ],
+    "runtimeDependencies": [
+      {
+        "bindingType": "Process",
+        "bindingKey": "761d42ac-bedd-4256-885f-e3c650c64018",
+        "bindingValues": {
+          "name": {
+            "defaultValue": "DealDeskAgent_plan",
+            "isExpression": false
+          },
+          "folderPath": {
+            "defaultValue": "Shared/DealDeskApprovalGlobal",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "bindingsVersion": "2.2",
+          "solutionsSupport": "true"
+        },
+        "resourceKind": "Process",
+        "resourceKey": "761d42ac-bedd-4256-885f-e3c650c64018",
+        "resourceName": "DealDeskAgent_plan",
+        "folderKey": "5fc9fcc4-7156-40c2-9930-7ce61dbbf78b"
+      },
+      {
+        "bindingType": "Process",
+        "bindingKey": "1c12455e-6e5a-4de3-81fe-55654ba1d2e8",
+        "bindingValues": {
+          "name": {
+            "defaultValue": "DealDeskAgent_render",
+            "isExpression": false
+          },
+          "folderPath": {
+            "defaultValue": "Shared/DealDeskApprovalGlobal",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "bindingsVersion": "2.2",
+          "solutionsSupport": "true"
+        },
+        "resourceKind": "Process",
+        "resourceKey": "1c12455e-6e5a-4de3-81fe-55654ba1d2e8",
+        "resourceName": "DealDeskAgent_render",
+        "folderKey": "5fc9fcc4-7156-40c2-9930-7ce61dbbf78b"
+      },
+      {
+        "bindingType": "Process",
+        "bindingKey": "99558773-c1cb-4f4b-994f-8dbb2eb242fd",
+        "bindingValues": {
+          "name": {
+            "defaultValue": "DealDeskAgent_process_response",
+            "isExpression": false
+          },
+          "folderPath": {
+            "defaultValue": "Shared/DealDeskApprovalGlobal",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "bindingsVersion": "2.2",
+          "solutionsSupport": "true"
+        },
+        "resourceKind": "Process",
+        "resourceKey": "99558773-c1cb-4f4b-994f-8dbb2eb242fd",
+        "resourceName": "DealDeskAgent_process_response",
+        "folderKey": "5fc9fcc4-7156-40c2-9930-7ce61dbbf78b"
+      },
+      {
+        "bindingType": "Process",
+        "bindingKey": "0932cb58-fc8a-4287-ab2c-410e85075ebc",
+        "bindingValues": {
+          "name": {
+            "defaultValue": "DealDeskApproval_WaitDecision",
+            "isExpression": false
+          },
+          "folderPath": {
+            "defaultValue": "Shared/DealDeskApprovalGlobal",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "bindingsVersion": "2.2",
+          "solutionsSupport": "true"
+        },
+        "resourceKind": "Process",
+        "resourceKey": "0932cb58-fc8a-4287-ab2c-410e85075ebc",
+        "resourceName": "DealDeskApproval_WaitDecision",
+        "folderKey": "5fc9fcc4-7156-40c2-9930-7ce61dbbf78b"
+      },
+      {
+        "bindingType": "Connection",
+        "bindingKey": "58ec2518-2165-44ff-9646-5170f811a42d",
+        "bindingValues": {
+          "connectionId": {
+            "defaultValue": "58ec2518-2165-44ff-9646-5170f811a42d",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "bindingsVersion": "2.2",
+          "connector": "uipath-uipath-dataservice",
+          "useConnectionService": "True"
+        },
+        "resourceKind": "Connection",
+        "resourceType": "uipath-uipath-dataservice",
+        "resourceKey": "58ec2518-2165-44ff-9646-5170f811a42d",
+        "resourceName": "daniela.rosenstein@catonetworks.com_42",
+        "folderKey": "c64a0cab-9723-4006-90d8-fd10f6e1ceff"
+      },
+      {
+        "bindingType": "Connection",
+        "bindingKey": "45b3022f-96ef-4ca4-99bb-39f15af717d5",
+        "bindingValues": {
+          "connectionId": {
+            "defaultValue": "45b3022f-96ef-4ca4-99bb-39f15af717d5",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "bindingsVersion": "2.2",
+          "connector": "uipath-microsoft-outlook365",
+          "useConnectionService": "True"
+        },
+        "resourceKind": "Connection",
+        "resourceType": "uipath-microsoft-outlook365",
+        "resourceKey": "45b3022f-96ef-4ca4-99bb-39f15af717d5",
+        "resourceName": "daniela.rosenstein@catonetworks.com_43",
+        "folderKey": "5fc9fcc4-7156-40c2-9930-7ce61dbbf78b"
+      }
+    ],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "type": "ProcessOrchestration",
+      "name": "DealDeskApproval",
+      "package": {
+        "key": "16acf19d-f87e-479e-9d83-b4eb88c5576e"
+      },
+      "packageName": "DealDeskSolution.agentic.DealDeskApproval",
+      "inputArguments": "{}",
+      "targetFrameworkValue": "Portable",
+      "retentionAction": "Delete",
+      "retentionPeriod": 30,
+      "staleRetentionAction": "Delete",
+      "staleRetentionPeriod": 180
+    },
+    "locks": [],
+    "key": "2a035e82-ea22-4e13-858f-01282765c847",
+    "files": []
+  }
+}

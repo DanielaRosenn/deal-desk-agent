@@ -1,0 +1,6 @@
+{
+  "Name": "DealDeskApproval_WaitDecision",
+  "ProjectType": "Process",
+  "Description": "RPA sub-process: creates Orchestrator External Task, POSTs to HITL, waits for decision",
+  "MainFile": "WaitDecision.xaml"
+}

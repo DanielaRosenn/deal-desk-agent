@@ -1,0 +1,17 @@
+{
+  "request": {
+    "approval_id": "rpc-8pct-001",
+    "process_type": "rpc",
+    "source_system": "salesforce",
+    "source_record_id": "006-mock-8pct",
+    "requester_email": "sales@example.com",
+    "raw_payload": {
+      "Opportunity": {
+        "Name": "Delta Corp Renewal",
+        "Discount__c": 0.08,
+        "Amount": 35000
+      }
+    },
+    "created_at": "2026-06-09T08:00:00Z"
+  }
+}

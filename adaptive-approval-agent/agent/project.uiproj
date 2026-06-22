@@ -1,0 +1,6 @@
+{
+  "ProjectType": "Agent",
+  "Name": "adaptive-approval-agent-core",
+  "Description": "Main Adaptive Approval Coded Agent",
+  "MainFile": null
+}

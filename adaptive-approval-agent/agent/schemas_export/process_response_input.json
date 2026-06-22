@@ -1,0 +1,457 @@
+{
+  "$defs": {
+    "ApprovalEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "approval_id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "Approval Id",
+          "type": "string"
+        },
+        "event_type": {
+          "enum": [
+            "created",
+            "routing_planned",
+            "card_generated",
+            "card_sent",
+            "card_viewed",
+            "section_expanded",
+            "decision_received",
+            "corrected_by_guardrail",
+            "fell_back_to_safe_mode",
+            "escalated",
+            "sla_breached",
+            "completed",
+            "failed"
+          ],
+          "title": "Event Type",
+          "type": "string"
+        },
+        "event_timestamp": {
+          "format": "date-time",
+          "title": "Event Timestamp",
+          "type": "string"
+        },
+        "approver_id": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approver Id"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        }
+      },
+      "required": [
+        "event_id",
+        "approval_id",
+        "event_type",
+        "event_timestamp"
+      ],
+      "title": "ApprovalEvent",
+      "type": "object"
+    },
+    "ApprovalRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "Approval Id",
+          "type": "string"
+        },
+        "process_type": {
+          "enum": [
+            "rpc",
+            "expense",
+            "access_request",
+            "vendor_onboarding"
+          ],
+          "title": "Process Type",
+          "type": "string"
+        },
+        "source_system": {
+          "enum": [
+            "salesforce",
+            "concur",
+            "okta",
+            "sap",
+            "manual",
+            "concur_computed"
+          ],
+          "title": "Source System",
+          "type": "string"
+        },
+        "source_record_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Source Record Id",
+          "type": "string"
+        },
+        "requester_email": {
+          "format": "email",
+          "title": "Requester Email",
+          "type": "string"
+        },
+        "requester_id": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requester Id"
+        },
+        "raw_payload": {
+          "additionalProperties": true,
+          "title": "Raw Payload",
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "sla_minutes": {
+          "default": 1440,
+          "maximum": 43200,
+          "minimum": 15,
+          "title": "Sla Minutes",
+          "type": "integer"
+        },
+        "config_version_snapshot": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Config Version Snapshot"
+        }
+      },
+      "required": [
+        "approval_id",
+        "process_type",
+        "source_system",
+        "source_record_id",
+        "requester_email",
+        "created_at"
+      ],
+      "title": "ApprovalRequest",
+      "type": "object"
+    },
+    "Approver": {
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "User Id",
+          "type": "string"
+        },
+        "email": {
+          "format": "email",
+          "title": "Email",
+          "type": "string"
+        },
+        "persona": {
+          "enum": [
+            "manager",
+            "director",
+            "vp",
+            "cfo",
+            "legal"
+          ],
+          "title": "Persona",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 50,
+          "minLength": 1,
+          "title": "Role",
+          "type": "string"
+        },
+        "display_name": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "geo": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Geo"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone"
+        }
+      },
+      "required": [
+        "user_id",
+        "email",
+        "persona",
+        "role",
+        "display_name"
+      ],
+      "title": "Approver",
+      "type": "object"
+    },
+    "ApproverResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "approver_id": {
+          "title": "Approver Id",
+          "type": "string"
+        },
+        "approver_email": {
+          "format": "email",
+          "title": "Approver Email",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "reject",
+            "request_info",
+            "escalate"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "comments": {
+          "anyOf": [
+            {
+              "maxLength": 2000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comments"
+        },
+        "responded_at": {
+          "format": "date-time",
+          "title": "Responded At",
+          "type": "string"
+        },
+        "channel": {
+          "enum": [
+            "outlook",
+            "slack",
+            "teams"
+          ],
+          "title": "Channel",
+          "type": "string"
+        },
+        "engagement_signals": {
+          "$ref": "#/$defs/EngagementSignals"
+        }
+      },
+      "required": [
+        "approver_id",
+        "approver_email",
+        "decision",
+        "responded_at",
+        "channel"
+      ],
+      "title": "ApproverResponse",
+      "type": "object"
+    },
+    "EngagementSignals": {
+      "additionalProperties": false,
+      "properties": {
+        "time_on_card_seconds": {
+          "anyOf": [
+            {
+              "maximum": 86400,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Time On Card Seconds"
+        },
+        "expanded_section_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Expanded Section Ids",
+          "type": "array"
+        },
+        "clicks_before_decision": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clicks Before Decision"
+        },
+        "info_request_keywords": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Info Request Keywords",
+          "type": "array"
+        }
+      },
+      "title": "EngagementSignals",
+      "type": "object"
+    },
+    "RoutingPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "approvers": {
+          "items": {
+            "$ref": "#/$defs/Approver"
+          },
+          "maxItems": 10,
+          "minItems": 1,
+          "title": "Approvers",
+          "type": "array"
+        },
+        "rationale": {
+          "maxLength": 1000,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "disposition": {
+          "default": "needs_approval",
+          "enum": [
+            "auto_clear",
+            "needs_approval",
+            "exception"
+          ],
+          "title": "Disposition",
+          "type": "string"
+        },
+        "risk_score": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Risk Score",
+          "type": "number"
+        },
+        "recommended_decision": {
+          "default": "approve",
+          "enum": [
+            "approve",
+            "reject",
+            "request_info",
+            "escalate"
+          ],
+          "title": "Recommended Decision",
+          "type": "string"
+        },
+        "recommendation_rationale": {
+          "default": "",
+          "maxLength": 1000,
+          "title": "Recommendation Rationale",
+          "type": "string"
+        },
+        "guardrail_violations_corrected": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Guardrail Violations Corrected",
+          "type": "array"
+        },
+        "soft_guidance_applied": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Soft Guidance Applied",
+          "type": "array"
+        }
+      },
+      "required": [
+        "approvers",
+        "rationale"
+      ],
+      "title": "RoutingPlan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "request": {
+      "$ref": "#/$defs/ApprovalRequest"
+    },
+    "routing_plan": {
+      "$ref": "#/$defs/RoutingPlan"
+    },
+    "current_approver_index": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Current Approver Index",
+      "type": "integer"
+    },
+    "response": {
+      "$ref": "#/$defs/ApproverResponse"
+    },
+    "history": {
+      "items": {
+        "$ref": "#/$defs/ApprovalEvent"
+      },
+      "title": "History",
+      "type": "array"
+    }
+  },
+  "required": [
+    "request",
+    "routing_plan",
+    "response"
+  ],
+  "title": "ProcessResponseInput",
+  "type": "object"
+}

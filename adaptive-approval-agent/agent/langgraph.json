@@ -1,0 +1,7 @@
+{
+  "graphs": {
+    "plan": "./main.py:plan_graph",
+    "render": "./main.py:render_graph",
+    "process_response": "./main.py:response_graph"
+  }
+}

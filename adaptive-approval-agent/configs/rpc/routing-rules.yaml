@@ -1,0 +1,29 @@
+hard_rules:
+  - id: rpc_discount_vp
+    when:
+      field: deal.discount_pct
+      operator: ">"
+      value: 0.25
+    require_role: vp_sales
+
+  - id: competitor_director_review
+    when:
+      field: deal.competitor_involved
+      operator: "=="
+      value: true
+    require_role: director
+
+soft_guidance:
+  - id: include_cfo_for_large_value
+    when:
+      field: deal.value_usd
+      operator: ">"
+      value: 500000
+    suggest_role: cfo
+
+  - id: low_health_csm_note
+    when:
+      field: deal.health_score
+      operator: "<"
+      value: 50
+    suggest_role: csm_lead

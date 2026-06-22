@@ -1,0 +1,30 @@
+{
+  "process_type": "expense",
+  "version": "1.0.0",
+  "fields": {
+    "expense.submitter_name": {
+      "label": "Submitted by",
+      "source": "concur",
+      "path": "Report.Submitter.Name",
+      "type": "string",
+      "formatter": "string",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary" },
+      "decision_weight": "medium"
+    },
+    "expense.total_amount": {
+      "label": "Total amount",
+      "source": "concur",
+      "path": "Report.TotalAmount",
+      "type": "number",
+      "formatter": "currency_usd",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary" },
+      "decision_weight": "high"
+    }
+  },
+  "personas": {
+    "manager": { "max_primary": 4, "max_expandable": 4, "preferred_channel": "outlook" },
+    "director": { "max_primary": 6, "max_expandable": 6, "preferred_channel": "outlook" }
+  }
+}

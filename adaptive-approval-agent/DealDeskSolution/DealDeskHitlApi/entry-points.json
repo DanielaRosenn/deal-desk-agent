@@ -1,0 +1,111 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "entryPoints": [
+    {
+      "filePath": "create_approval.json",
+      "uniqueId": "12c35b35-8fed-4326-a672-4032cbf49ff4",
+      "type": "api",
+      "input": {
+        "type": "object",
+        "properties": {
+          "processId": { "type": "string" },
+          "title": { "type": "string" },
+          "metadata": { "type": "object" },
+          "approvers": { "type": "array" },
+          "approvalType": { "type": "string" },
+          "priority": { "type": "string" },
+          "formData": { "type": "object" },
+          "callbackUrl": { "type": "string" }
+        },
+        "required": []
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "processId": { "type": "string" },
+          "status": { "type": "string" },
+          "metadata": { "type": "object" },
+          "approvalLines": { "type": "array" },
+          "createdAt": { "type": "string" },
+          "expiresAt": { "type": "string" }
+        }
+      }
+    },
+    {
+      "filePath": "get_approval.json",
+      "uniqueId": "3c0409fa-4fff-4a5d-bca1-1bb2f98074e1",
+      "type": "api",
+      "input": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "processId": { "type": "string" },
+          "status": { "type": "string" }
+        },
+        "required": []
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "processId": { "type": "string" },
+          "status": { "type": "string" },
+          "lines": { "type": "array" },
+          "completedAt": { "type": "string" }
+        }
+      }
+    },
+    {
+      "filePath": "respond_approval.json",
+      "uniqueId": "b51e4174-723d-4f16-9539-8a19ab35dfd6",
+      "type": "api",
+      "input": {
+        "type": "object",
+        "properties": {
+          "approvalId": { "type": "string" },
+          "lineId": { "type": "string" },
+          "decision": { "type": "string" },
+          "comments": { "type": "string" },
+          "responseData": { "type": "object" }
+        },
+        "required": []
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "status": { "type": "string" },
+          "decision": { "type": "string" },
+          "comments": { "type": "string" },
+          "completedAt": { "type": "string" }
+        }
+      }
+    },
+    {
+      "filePath": "spike_probe.json",
+      "uniqueId": "99aa10d6-1c7a-4dca-85d2-a11a2d5f8dd7",
+      "type": "api",
+      "input": {
+        "type": "object",
+        "properties": {
+          "probe": {
+            "type": "string"
+          }
+        },
+        "required": []
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "echo": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+sequenceDiagram
+  autonumber
+  participant Start as Opportunity change
+  participant Bpmn as Maestro BPMN
+  participant Agent as Coded Agent
+  participant Outlook as Outlook
+  participant Bridge as Azure Function bridge
+  participant Approver as Approver
+  participant Log as Data Fabric
+
+  Start->>Bpmn: Start instance (payload)
+  Bpmn->>Agent: plan (evaluate + draft)
+  Agent-->>Bpmn: disposition, recommendation, approver chain
+  alt disposition == auto_clear
+    Bpmn->>Log: Record auto_cleared
+  else disposition == needs_approval
+    loop per approver in chain
+      Bpmn->>Agent: render card
+      Bpmn->>Outlook: send Adaptive Card
+      Outlook->>Approver: card delivered (task open)
+      alt decision within SLA
+        Approver->>Bridge: click Approve or Reject
+        Bridge->>Bpmn: CompleteAppTask (resume)
+        Bpmn->>Agent: process_response decides next action
+      else SLA breach
+        Bpmn->>Outlook: reminder and set escalated
+      end
+    end
+    Bpmn->>Outlook: notify requester
+    Bpmn->>Log: record agent rec vs human decision
+  end

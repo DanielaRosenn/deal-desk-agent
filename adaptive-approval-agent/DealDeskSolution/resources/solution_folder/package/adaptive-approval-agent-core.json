@@ -1,0 +1,32 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "adaptive-approval-agent-core",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "fileName": "adaptive-approval-agent-core.0.1.22.nupkg",
+      "fileReference": "adaptive-approval-agent-core_0.1.22",
+      "name": "adaptive-approval-agent-core"
+    },
+    "locks": [],
+    "key": "adaptive-approval-agent-core:0.1.22",
+    "files": [
+      {
+        "key": "adaptive-approval-agent-core_0.1.22",
+        "name": "adaptive-approval-agent-core.0.1.22.nupkg",
+        "url": "https://cloud.uipath.com/catonetworks/Test/orchestrator_/odata/Processes/UiPath.Server.Configuration.OData.DownloadPackage(key='adaptive-approval-agent-core:0.1.22')?feedId=78901f68-a02d-4b8c-8fbd-21835c66432e",
+        "kind": "Package",
+        "version": "0.1.22"
+      }
+    ]
+  }
+}

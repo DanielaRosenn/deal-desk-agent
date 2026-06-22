@@ -1,0 +1,17 @@
+{
+  "request": {
+    "approval_id": "rpc-auto-001",
+    "process_type": "rpc",
+    "source_system": "salesforce",
+    "source_record_id": "006-mock-auto",
+    "requester_email": "owner@example.com",
+    "raw_payload": {
+      "Opportunity": {
+        "Name": "Gamma Renewal",
+        "Discount__c": 0.03,
+        "Amount": 20000
+      }
+    },
+    "created_at": "2026-05-24T00:00:00Z"
+  }
+}

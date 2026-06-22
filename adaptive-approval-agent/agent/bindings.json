@@ -1,0 +1,21 @@
+{
+    "version": "2.0",
+    "resources": [
+        {
+            "resource": "connection",
+            "key": "outlook-approval",
+            "value": {
+                "ConnectionId": {
+                    "defaultValue": "outlook-approval",
+                    "isExpression": false,
+                    "displayName": "Connection"
+                }
+            },
+            "metadata": {
+                "BindingsVersion": "2.2",
+                "Connector": "",
+                "UseConnectionService": "True"
+            }
+        }
+    ]
+}

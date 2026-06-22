@@ -1,0 +1,53 @@
+{
+  "employees": [
+    {
+      "id": "emp-owner-001",
+      "email": "daniela.rosenstein@catonetworks.com",
+      "display_name": "Opportunity Owner",
+      "title": "Account Executive",
+      "role": "owner",
+      "reportsTo": "emp-mgr-001"
+    },
+    {
+      "id": "emp-mgr-001",
+      "email": "daniela.rosenstein@catonetworks.com",
+      "display_name": "Maya Stone",
+      "title": "Regional Sales Manager",
+      "role": "manager",
+      "reportsTo": "emp-dir-001"
+    },
+    {
+      "id": "emp-dir-001",
+      "email": "daniela.rosenstein@catonetworks.com",
+      "display_name": "Daniel Park",
+      "title": "Sales Director",
+      "role": "director",
+      "reportsTo": "emp-vp-001"
+    },
+    {
+      "id": "emp-vp-001",
+      "email": "daniela.rosenstein@catonetworks.com",
+      "display_name": "Ari Reynolds",
+      "title": "VP Sales",
+      "role": "vp_sales",
+      "reportsTo": "emp-cfo-001"
+    },
+    {
+      "id": "emp-cfo-001",
+      "email": "daniela.rosenstein@catonetworks.com",
+      "display_name": "Lior Cohen",
+      "title": "Chief Financial Officer",
+      "role": "cfo",
+      "reportsTo": "emp-cro-001"
+    },
+    {
+      "id": "emp-cro-001",
+      "email": "daniela.rosenstein@catonetworks.com",
+      "display_name": "Noa Bennett",
+      "title": "Chief Revenue Officer",
+      "role": "cro",
+      "reportsTo": null
+    }
+  ],
+  "defaultOwnerEmail": "daniela.rosenstein@catonetworks.com"
+}

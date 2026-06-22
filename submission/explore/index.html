@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Deal Desk Agent - AgentHack 2026</title>
+<style>
+  :root{
+    --ink:#11161C; --panel:#1C232B; --panel2:#161C23; --line:#2A333D;
+    --orange:#FA4616; --blue:#2EA8FF; --cyan:#22D3EE; --amber:#FFB020;
+    --teal:#2BD9A6; --violet:#B794F6; --white:#F5F8FB; --slate:#C9D3DD; --muted:#8A97A4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:var(--slate);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header{border-bottom:1px solid var(--line);padding:18px 0;position:sticky;top:0;
+    background:rgba(17,22,28,.92);backdrop-filter:blur(8px);z-index:10}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--white)}
+  .mark{width:18px;height:18px;background:var(--orange);border-radius:3px}
+  .kicker{color:var(--orange);font-weight:700;letter-spacing:.04em;font-size:13px}
+  .hero{padding:64px 0 40px}
+  .hero h1{font-size:54px;line-height:1.05;margin:14px 0 8px;color:var(--white);font-weight:800}
+  .hero .tag{color:var(--orange);font-size:24px;font-weight:700;margin:0 0 14px}
+  .hero p{font-size:18px;max-width:680px}
+  .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .pill{border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;font-size:13px;
+    font-weight:600;color:var(--white)}
+  .pill.o{border-color:var(--orange)} .pill.b{border-color:var(--blue)}
+  .pill.t{border-color:var(--teal)}
+  section{padding:40px 0;border-top:1px solid var(--line)}
+  h2{color:var(--white);font-size:28px;margin:0 0 6px;font-weight:800}
+  h2 .bar{display:inline-block;width:34px;height:5px;background:var(--orange);
+    border-radius:3px;vertical-align:middle;margin-right:12px}
+  .lead{color:var(--muted);margin:0 0 22px;font-size:15px}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  .g2{grid-template-columns:1.1fr .9fr}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .card h3{margin:0 0 6px;color:var(--white);font-size:17px}
+  .card .top{height:4px;border-radius:3px;margin:-18px -18px 14px;border-top-left-radius:13px;
+    border-top-right-radius:13px}
+  .card p{margin:0;font-size:14px}
+  img.media{width:100%;border:1px solid var(--line);border-radius:14px;display:block}
+  /* calculator */
+  .calc{background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);border-radius:18px;padding:26px}
+  .calc .row{margin-bottom:22px}
+  .calc label{display:flex;justify-content:space-between;color:var(--white);font-weight:700;
+    font-size:15px;margin-bottom:10px}
+  .calc label .val{color:var(--orange);font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;-webkit-appearance:none;height:6px;border-radius:6px;
+    background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;
+    border-radius:50%;background:var(--orange);cursor:pointer;border:3px solid var(--ink);
+    box-shadow:0 0 0 1px var(--orange)}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;
+    background:var(--orange);cursor:pointer;border:3px solid var(--ink)}
+  .presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .preset{cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--slate);
+    border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600}
+  .preset:hover{border-color:var(--orange);color:var(--white)}
+  .out{background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:22px;height:100%}
+  .badge{display:inline-block;font-weight:800;font-size:14px;padding:7px 14px;border-radius:999px;
+    color:var(--ink);letter-spacing:.02em}
+  .meterwrap{margin:18px 0 6px}
+  .meterwrap .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);
+    margin-bottom:6px}
+  .meter{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+  .meter>span{display:block;height:100%;width:0;border-radius:6px;
+    background:linear-gradient(90deg,var(--teal),var(--amber),var(--orange));transition:width .25s}
+  .chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .chip{background:var(--panel);border:1.5px solid var(--blue);color:var(--white);font-weight:700;
+    font-size:13px;border-radius:8px;padding:7px 12px}
+  .arrow{color:var(--muted);font-weight:800}
+  .ratio{margin-top:16px;font-size:13.5px;color:var(--slate);border-left:3px solid var(--orange);
+    padding-left:12px}
+  .k{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  .deckstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .deckstrip img{width:100%;border:1px solid var(--line);border-radius:8px;display:block}
+  footer{border-top:1px solid var(--line);padding:30px 0 50px;color:var(--muted);font-size:13px}
+  .links{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+  .btn{border:1.5px solid var(--blue);border-radius:10px;padding:10px 18px;color:var(--white);
+    font-weight:700;font-size:14px}
+  .btn.o{border-color:var(--orange)}
+  @media(max-width:820px){.g3,.g4,.g2,.deckstrip{grid-template-columns:1fr 1fr}
+    .hero h1{font-size:38px}}
+  @media(max-width:520px){.g3,.g4,.g2,.deckstrip{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap brand"><span class="mark"></span>UiPath AgentHack 2026
+  <span style="color:var(--muted);font-weight:500;margin-left:6px">·  Deal Desk Agent</span>
+  <span class="kicker" style="margin-left:auto">TRACK 2 · MAESTRO BPMN</span></div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="kicker">FROM LAPTOP TO PRODUCTION, GOVERNED</div>
+    <h1>Deal Desk Agent</h1>
+    <div class="tag">Pricing approvals that decide, draft, and route themselves.</div>
+    <p>A Python LangGraph <b>coded agent</b> judges every opportunity change; a <b>UiPath Maestro
+      BPMN</b> process runs the governed lifecycle - human-in-the-loop, SLA, and a full audit trail.
+      Low-risk deals clear with zero human touch.</p>
+    <div class="pills">
+      <span class="pill o">Track 2: Maestro BPMN</span>
+      <span class="pill b">Built with coding agents (Cursor + Claude)</span>
+      <span class="pill t">Runs on Automation Cloud</span>
+    </div>
+  </div>
+
+  <!-- CALCULATOR -->
+  <section style="border-top:none;padding-top:8px">
+    <h2><span class="bar"></span>Try the agent's brain</h2>
+    <p class="lead">This calculator runs the exact decision logic from the agent's
+      <code>plan</code> node (<code>plan_nodes.py</code>). Move the sliders - watch the disposition,
+      risk score, and approver chain change live.</p>
+    <div class="grid g2">
+      <div class="calc">
+        <div class="row">
+          <label>Discount <span class="val" id="dval">8%</span></label>
+          <input type="range" id="disc" min="0" max="50" step="1" value="8" />
+        </div>
+        <div class="row">
+          <label>Contract value <span class="val" id="vval">$40,000</span></label>
+          <input type="range" id="val" min="0" max="2000000" step="10000" value="40000" />
+        </div>
+        <div class="k" style="margin-bottom:8px">Quick scenarios</div>
+        <div class="presets">
+          <span class="preset" data-d="4" data-v="30000">Auto-clear (4% / $30k)</span>
+          <span class="preset" data-d="8" data-v="40000">One manager (8% / $40k)</span>
+          <span class="preset" data-d="30" data-v="1200000">Multi-tier (30% / $1.2M)</span>
+          <span class="preset" data-d="10" data-v="800000">CFO by value (10% / $800k)</span>
+        </div>
+      </div>
+      <div class="out">
+        <div class="k">Disposition</div>
+        <div style="margin:8px 0 4px"><span class="badge" id="disp">needs_approval</span></div>
+        <div class="meterwrap">
+          <div class="lbl"><span>Risk score</span><span id="riskpct">0.54</span></div>
+          <div class="meter"><span id="riskbar"></span></div>
+        </div>
+        <div class="k" style="margin-top:16px">Approver chain</div>
+        <div class="chain" id="chain"></div>
+        <div class="ratio" id="ratio"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section>
+    <h2><span class="bar"></span>The whole flow</h2>
+    <p class="lead">Salesforce + HiBob -> LangGraph agent -> Maestro BPMN ->
+      Outlook / Action Center / Azure bridge / Data Fabric. The agent owns the judgment;
+      Maestro owns the lifecycle.</p>
+    <img class="media" src="../code-graph/deal-desk-flow.gif"
+      alt="Animated Deal Desk Agent flow" />
+  </section>
+
+  <!-- THREE PATHS -->
+  <section>
+    <h2><span class="bar"></span>Three paths, one process</h2>
+    <p class="lead">Same BPMN process, three behaviors - decided by the agent.</p>
+    <div class="grid g3">
+      <div class="card"><div class="top" style="background:var(--teal)"></div>
+        <h3>Auto-clear</h3><p>&le;5% / &le;$50k. Zero cards, logged and closed - no human touch.</p></div>
+      <div class="card"><div class="top" style="background:var(--blue)"></div>
+        <h3>One manager</h3><p>8% / $40k. One Outlook Adaptive Card, approve, done.</p></div>
+      <div class="card"><div class="top" style="background:var(--orange)"></div>
+        <h3>Multi-tier</h3><p>30% / $1.2M. Manager &rarr; Director &rarr; VP &rarr; CFO, in order.</p></div>
+    </div>
+  </section>
+
+  <!-- BUILT WITH -->
+  <section>
+    <h2><span class="bar"></span>Built by coding agents</h2>
+    <p class="lead">Natural language -> coding agents -> a governed cloud process. The bonus,
+      embodied: this solution was authored with Cursor + Claude through UiPath for Coding Agents.</p>
+    <div class="grid g4">
+      <div class="card"><div class="top" style="background:var(--muted)"></div>
+        <h3>Prompts</h3><p>Plain-language intent on a laptop.</p></div>
+      <div class="card"><div class="top" style="background:var(--blue)"></div>
+        <h3>Cursor + Claude</h3><p>+ the <code>uip</code> CLI and UiPath skills.</p></div>
+      <div class="card"><div class="top" style="background:var(--violet)"></div>
+        <h3>Generated</h3><p>Agent, BPMN, bindings, schema, Data Fabric entity.</p></div>
+      <div class="card"><div class="top" style="background:var(--teal)"></div>
+        <h3>Automation Cloud</h3><p>Published agent + deployed processes.</p></div>
+    </div>
+  </section>
+
+  <!-- GOVERNANCE -->
+  <section>
+    <h2><span class="bar"></span>Governance &amp; human-in-the-loop</h2>
+    <div class="grid g4">
+      <div class="card"><div class="top" style="background:var(--violet)"></div>
+        <h3>Human gate</h3><p>Action Center task; Azure Function bridge resumes the instance.</p></div>
+      <div class="card"><div class="top" style="background:var(--amber)"></div>
+        <h3>Time governance</h3><p>Boundary SLA timer -> reminder + escalation.</p></div>
+      <div class="card"><div class="top" style="background:var(--teal)"></div>
+        <h3>Audit</h3><p>Data Fabric logs agent recommendation vs. human decision.</p></div>
+      <div class="card"><div class="top" style="background:var(--orange)"></div>
+        <h3>Guardrails</h3><p>Bad payload -> exception; empty chain -> manager fallback.</p></div>
+    </div>
+  </section>
+
+  <!-- DECK -->
+  <section>
+    <h2><span class="bar"></span>Presentation</h2>
+    <p class="lead">12-slide deck in the AgentHack palette - "from laptop to production, governed".</p>
+    <div class="deckstrip">
+      <img src="../deck/slide-01.png" alt="slide 1" />
+      <img src="../deck/slide-06.png" alt="slide 6" />
+      <img src="../deck/slide-08.png" alt="slide 8" />
+      <img src="../deck/slide-09.png" alt="slide 9" />
+    </div>
+  </section>
+
+  <footer>
+    <div class="k" style="color:var(--white)">Decide. Draft. Route. Audit. Autonomously.</div>
+    <div class="links">
+      <a class="btn o" href="#">DevPost project</a>
+      <a class="btn" href="#">Demo video</a>
+      <a class="btn" href="#">Source code</a>
+    </div>
+    <p style="margin-top:18px">UiPath AgentHack 2026 · Track 2: Maestro BPMN · Daniela Rosenstein,
+      Cato Networks. Salesforce and HiBob are production integrations (mocked in the demo);
+      Outlook is a live connection.</p>
+  </footer>
+</div>
+
+<script>
+  // Mirrors agent/nodes/plan_nodes.py
+  var DISCOUNT_ESCALATION = 0.25, VALUE_CFO = 500000, AUTO_DISC = 0.05, AUTO_VAL = 50000;
+  var ROLE_LABEL = {manager:"Manager", director:"Director", vp_sales:"VP Sales", cfo:"CFO"};
+  var DISP_STYLE = {
+    auto_clear:   {bg:"var(--teal)",   txt:"auto_clear"},
+    needs_approval:{bg:"var(--amber)", txt:"needs_approval"},
+    exception:    {bg:"var(--orange)", txt:"exception"}
+  };
+
+  var disc = document.getElementById("disc"), val = document.getElementById("val");
+
+  function fmtUSD(n){ return "$" + n.toLocaleString("en-US"); }
+
+  function assess(discPct, valueUsd){
+    var risk = Math.min(1, 0.5*(discPct/DISCOUNT_ESCALATION) + 0.5*(valueUsd/VALUE_CFO));
+    var roles = ["manager"], reasons = [];
+    var dDisp = Math.round(discPct*100) + "%", vDisp = fmtUSD(valueUsd);
+    if (discPct > DISCOUNT_ESCALATION){
+      roles.push("director","vp_sales");
+      reasons.push("discount " + dDisp + " exceeds the 25% threshold, escalating to Director and VP of Sales");
+    } else {
+      reasons.push("discount " + dDisp + " is within the manager's authority");
+    }
+    if (valueUsd > VALUE_CFO){
+      roles.push("cfo");
+      reasons.push("contract value " + vDisp + " exceeds $500,000, adding CFO sign-off");
+    }
+    var disposition = (discPct <= AUTO_DISC && valueUsd <= AUTO_VAL) ? "auto_clear" : "needs_approval";
+    return {risk:risk, roles:roles, disposition:disposition, reasons:reasons, dDisp:dDisp, vDisp:vDisp};
+  }
+
+  function render(){
+    var d = parseInt(disc.value,10)/100, v = parseInt(val.value,10);
+    document.getElementById("dval").textContent = Math.round(d*100) + "%";
+    document.getElementById("vval").textContent = fmtUSD(v);
+    var r = assess(d, v);
+
+    var st = DISP_STYLE[r.disposition];
+    var badge = document.getElementById("disp");
+    badge.textContent = st.txt; badge.style.background = st.bg;
+
+    document.getElementById("riskpct").textContent = r.risk.toFixed(2);
+    document.getElementById("riskbar").style.width = (r.risk*100) + "%";
+
+    var chain = document.getElementById("chain");
+    chain.innerHTML = "";
+    if (r.disposition === "auto_clear"){
+      var none = document.createElement("span");
+      none.className = "chip"; none.style.borderColor = "var(--teal)";
+      none.textContent = "0 approvers - auto-cleared";
+      chain.appendChild(none);
+    } else {
+      r.roles.forEach(function(role, i){
+        if (i > 0){ var a = document.createElement("span"); a.className="arrow"; a.textContent="\u2192"; chain.appendChild(a); }
+        var c = document.createElement("span"); c.className="chip"; c.textContent = ROLE_LABEL[role];
+        chain.appendChild(c);
+      });
+    }
+
+    var ratio = document.getElementById("ratio");
+    if (r.disposition === "auto_clear"){
+      ratio.textContent = "Discount " + r.dDisp + " and value " + r.vDisp +
+        " are within standing pricing policy (<=5% / <=$50k); no human approval required.";
+    } else {
+      ratio.textContent = r.reasons.join("; ") + ". Recommend approve with standard terms, " +
+        "pending sign-off from the routed approvers.";
+    }
+  }
+
+  disc.addEventListener("input", render);
+  val.addEventListener("input", render);
+  document.querySelectorAll(".preset").forEach(function(p){
+    p.addEventListener("click", function(){
+      disc.value = p.getAttribute("data-d");
+      val.value = p.getAttribute("data-v");
+      render();
+    });
+  });
+  render();
+</script>
+</body>
+</html>

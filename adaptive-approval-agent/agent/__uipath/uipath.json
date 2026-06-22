@@ -1,0 +1,12 @@
+{
+  "runtime": {
+    "internalArguments": {
+      "resourceOverwrites": {
+        "connection.outlook-approval": {
+          "connectionId": "0eaf7597-3562-4ba8-abe8-dcbeb61bf370",
+          "folderKey": "c3072f88-2fda-4003-8b25-a630abe66ac4"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "version": "2.0",
+  "resources": [
+    {
+      "resource": "Process",
+      "key": "761d42ac-bedd-4256-885f-e3c650c64018",
+      "value": {
+        "name": { "defaultValue": "DealDeskAgent_plan", "isExpression": false },
+        "folderPath": { "defaultValue": "Shared/DealDeskApprovalGlobal", "isExpression": false }
+      },
+      "metadata": {
+        "BindingsVersion": "2.2",
+        "SolutionsSupport": "true",
+        "subType": "Agent"
+      }
+    },
+    {
+      "resource": "Process",
+      "key": "1c12455e-6e5a-4de3-81fe-55654ba1d2e8",
+      "value": {
+        "name": { "defaultValue": "DealDeskAgent_render", "isExpression": false },
+        "folderPath": { "defaultValue": "Shared/DealDeskApprovalGlobal", "isExpression": false }
+      },
+      "metadata": {
+        "BindingsVersion": "2.2",
+        "SolutionsSupport": "true",
+        "subType": "Agent"
+      }
+    },
+    {
+      "resource": "Process",
+      "key": "99558773-c1cb-4f4b-994f-8dbb2eb242fd",
+      "value": {
+        "name": { "defaultValue": "DealDeskAgent_process_response", "isExpression": false },
+        "folderPath": { "defaultValue": "Shared/DealDeskApprovalGlobal", "isExpression": false }
+      },
+      "metadata": {
+        "BindingsVersion": "2.2",
+        "SolutionsSupport": "true",
+        "subType": "Agent"
+      }
+    },
+    {
+      "resource": "Process",
+      "key": "0932cb58-fc8a-4287-ab2c-410e85075ebc",
+      "value": {
+        "name": { "defaultValue": "DealDeskApproval_WaitDecision", "isExpression": false },
+        "folderPath": { "defaultValue": "Shared/DealDeskApprovalGlobal", "isExpression": false }
+      },
+      "metadata": {
+        "BindingsVersion": "2.2",
+        "SolutionsSupport": "true",
+        "subType": "Process"
+      }
+    },
+    {
+      "resource": "Connection",
+      "key": "58ec2518-2165-44ff-9646-5170f811a42d",
+      "id": "Connection58ec2518-2165-44ff-9646-5170f811a42d58ec2518-2165-44ff-9646-5170f811a42dFalse",
+      "value": {
+        "ConnectionId": {
+          "defaultValue": "58ec2518-2165-44ff-9646-5170f811a42d",
+          "isExpression": false,
+          "displayName": "Connection",
+          "description": "The connection to be used"
+        }
+      },
+      "metadata": {
+        "BindingsVersion": "2.2",
+        "Connector": "uipath-uipath-dataservice",
+        "UseConnectionService": "True"
+      }
+    },
+    {
+      "resource": "Connection",
+      "key": "45b3022f-96ef-4ca4-99bb-39f15af717d5",
+      "id": "Connection45b3022f-96ef-4ca4-99bb-39f15af717d545b3022f-96ef-4ca4-99bb-39f15af717d5False",
+      "value": {
+        "ConnectionId": {
+          "defaultValue": "45b3022f-96ef-4ca4-99bb-39f15af717d5",
+          "isExpression": false,
+          "displayName": "Connection",
+          "description": "The connection to be used"
+        }
+      },
+      "metadata": {
+        "BindingsVersion": "2.2",
+        "Connector": "uipath-microsoft-outlook365",
+        "UseConnectionService": "True"
+      }
+    }
+  ]
+}

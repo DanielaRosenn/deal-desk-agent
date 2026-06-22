@@ -1,0 +1,29 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "$id": "entry-points.json",
+  "entryPoints": [
+    {
+      "filePath": "/content/DealDeskApproval.bpmn#Event_start",
+      "uniqueId": "ffd2e6e3-8dfe-497b-8431-a09be0313615",
+      "type": "processorchestration",
+      "input": {
+        "type": "object",
+        "properties": {
+          "request": {
+            "type": "object",
+            "title": "Request",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "request"
+        ]
+      },
+      "output": {
+        "type": "object",
+        "properties": {}
+      },
+      "displayName": "Manual trigger"
+    }
+  ]
+}

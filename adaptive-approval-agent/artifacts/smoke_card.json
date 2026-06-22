@@ -1,0 +1,86 @@
+{
+  "subject": "Renewal approval - Unknown Customer (N/A off)",
+  "html": "<div style=\"font-family:Segoe UI,Arial,sans-serif;max-width:520px;margin:0 auto;border:1px solid #E2E8F0;border-radius:14px;overflow:hidden;\">\n  <div style=\"background:#1E3A8A;padding:18px 22px;\">\n    <div style=\"color:#BFDBFE;font-size:12px;letter-spacing:.5px;text-transform:uppercase;\">Renewal Price Commitment</div>\n    <div style=\"color:#FFFFFF;font-size:20px;font-weight:700;margin-top:2px;\">Approval needed</div>\n  </div>\n  <div style=\"padding:20px 22px;\">\n    <div style=\"display:inline-block;padding:4px 10px;border-radius:999px;background:#059669;color:#FFFFFF;font-size:12px;font-weight:600;\">Standard approval</div>\n    <p style=\"color:#475569;font-size:14px;margin:14px 0 6px;\">Hello Manager One, please review and action this renewal request.</p>\n    <table style=\"width:100%;border-collapse:collapse;\"><tr><td style=\"padding:6px 0;color:#64748B;font-size:13px;width:140px;\">Customer</td><td style=\"padding:6px 0;color:#0F172A;font-size:15px;font-weight:600;\">Unknown Customer</td></tr><tr><td style=\"padding:6px 0;color:#64748B;font-size:13px;width:140px;\">Discount</td><td style=\"padding:6px 0;color:#059669;font-size:15px;font-weight:600;\">N/A</td></tr><tr><td style=\"padding:6px 0;color:#64748B;font-size:13px;width:140px;\">Contract value</td><td style=\"padding:6px 0;color:#0F172A;font-size:15px;font-weight:600;\">N/A</td></tr><tr><td style=\"padding:6px 0;color:#64748B;font-size:13px;width:140px;\">Requester</td><td style=\"padding:6px 0;color:#0F172A;font-size:15px;font-weight:600;\">requester@example.com</td></tr><tr><td style=\"padding:6px 0;color:#64748B;font-size:13px;width:140px;\">Approval ID</td><td style=\"padding:6px 0;color:#0F172A;font-size:15px;font-weight:600;\">demo-001</td></tr></table>\n    <div style=\"margin:16px 0 4px;padding:12px 14px;background:#F1F5F9;border-radius:8px;color:#334155;font-size:13px;line-height:1.5;\"><b>Why you:</b> Unknown Customer renewal at N/A discount on N/A. discount within standard manager authority.</div>\n    <div style=\"margin:18px 0 4px;\"><a href=\"https://example.com/callback?approvalId=demo-001&amp;decision=approve\" style=\"display:inline-block;margin:0 8px 8px 0;padding:11px 22px;background:#059669;color:#FFFFFF;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px;\">Approve</a><a href=\"https://example.com/callback?approvalId=demo-001&amp;decision=reject\" style=\"display:inline-block;margin:0 8px 8px 0;padding:11px 22px;background:#DC2626;color:#FFFFFF;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px;\">Reject</a><a href=\"https://example.com/callback?approvalId=demo-001&amp;decision=request_info\" style=\"display:inline-block;margin:0 8px 8px 0;padding:11px 22px;background:#475569;color:#FFFFFF;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px;\">Request info</a></div>\n    <p style=\"color:#94A3B8;font-size:12px;margin-top:16px;\">Click <b>Approve / Reject / Request info</b> above to record your decision, or open your UiPath Action Center task. Routing is governed by automated discount and contract-value policy.</p>\n  </div>\n</div>\n<script type=\"application/adaptivecard+json\">\n{\n  \"type\": \"AdaptiveCard\",\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"version\": \"1.5\",\n  \"originator\": \"00000000-0000-0000-0000-000000000000\",\n  \"hideOriginalBody\": true,\n  \"body\": [\n    {\n      \"type\": \"TextBlock\",\n      \"text\": \"Renewal Price Commitment - Approval needed\",\n      \"weight\": \"Bolder\",\n      \"size\": \"Large\",\n      \"wrap\": true\n    },\n    {\n      \"type\": \"TextBlock\",\n      \"text\": \"Standard approval\",\n      \"color\": \"Good\",\n      \"weight\": \"Bolder\",\n      \"spacing\": \"Small\",\n      \"wrap\": true\n    },\n    {\n      \"type\": \"FactSet\",\n      \"facts\": [\n        {\n          \"title\": \"Customer\",\n          \"value\": \"Unknown Customer\"\n        },\n        {\n          \"title\": \"Discount\",\n          \"value\": \"N/A\"\n        },\n        {\n          \"title\": \"Contract value\",\n          \"value\": \"N/A\"\n        },\n        {\n          \"title\": \"Requester\",\n          \"value\": \"requester@example.com\"\n        },\n        {\n          \"title\": \"Approval ID\",\n          \"value\": \"demo-001\"\n        }\n      ]\n    },\n    {\n      \"type\": \"TextBlock\",\n      \"text\": \"Why you: Unknown Customer renewal at N/A discount on N/A. discount within standard manager authority.\",\n      \"wrap\": true,\n      \"isSubtle\": true,\n      \"spacing\": \"Medium\"\n    }\n  ],\n  \"actions\": [\n    {\n      \"type\": \"Action.Http\",\n      \"title\": \"Approve\",\n      \"style\": \"positive\",\n      \"method\": \"POST\",\n      \"url\": \"https://example.com/callback?approvalId=demo-001&decision=approve\",\n      \"body\": \"\"\n    },\n    {\n      \"type\": \"Action.Http\",\n      \"title\": \"Reject\",\n      \"style\": \"destructive\",\n      \"method\": \"POST\",\n      \"url\": \"https://example.com/callback?approvalId=demo-001&decision=reject\",\n      \"body\": \"\"\n    },\n    {\n      \"type\": \"Action.Http\",\n      \"title\": \"Request info\",\n      \"style\": \"default\",\n      \"method\": \"POST\",\n      \"url\": \"https://example.com/callback?approvalId=demo-001&decision=request_info\",\n      \"body\": \"\"\n    }\n  ]\n}\n</script>",
+  "card": {
+    "type": "AdaptiveCard",
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.5",
+    "originator": "00000000-0000-0000-0000-000000000000",
+    "hideOriginalBody": true,
+    "body": [
+      {
+        "type": "TextBlock",
+        "text": "Renewal Price Commitment - Approval needed",
+        "weight": "Bolder",
+        "size": "Large",
+        "wrap": true
+      },
+      {
+        "type": "TextBlock",
+        "text": "Standard approval",
+        "color": "Good",
+        "weight": "Bolder",
+        "spacing": "Small",
+        "wrap": true
+      },
+      {
+        "type": "FactSet",
+        "facts": [
+          {
+            "title": "Customer",
+            "value": "Unknown Customer"
+          },
+          {
+            "title": "Discount",
+            "value": "N/A"
+          },
+          {
+            "title": "Contract value",
+            "value": "N/A"
+          },
+          {
+            "title": "Requester",
+            "value": "requester@example.com"
+          },
+          {
+            "title": "Approval ID",
+            "value": "demo-001"
+          }
+        ]
+      },
+      {
+        "type": "TextBlock",
+        "text": "Why you: Unknown Customer renewal at N/A discount on N/A. discount within standard manager authority.",
+        "wrap": true,
+        "isSubtle": true,
+        "spacing": "Medium"
+      }
+    ],
+    "actions": [
+      {
+        "type": "Action.Http",
+        "title": "Approve",
+        "style": "positive",
+        "method": "POST",
+        "url": "https://example.com/callback?approvalId=demo-001&decision=approve",
+        "body": ""
+      },
+      {
+        "type": "Action.Http",
+        "title": "Reject",
+        "style": "destructive",
+        "method": "POST",
+        "url": "https://example.com/callback?approvalId=demo-001&decision=reject",
+        "body": ""
+      },
+      {
+        "type": "Action.Http",
+        "title": "Request info",
+        "style": "default",
+        "method": "POST",
+        "url": "https://example.com/callback?approvalId=demo-001&decision=request_info",
+        "body": ""
+      }
+    ]
+  }
+}

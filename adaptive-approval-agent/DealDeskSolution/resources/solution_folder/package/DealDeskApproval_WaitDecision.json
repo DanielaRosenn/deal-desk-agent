@@ -1,0 +1,23 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "DealDeskApproval_WaitDecision",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "ebd81e9d-5a42-4caa-ac76-4cc3ff40f79b",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "DealDeskApproval_WaitDecision"
+    },
+    "locks": [],
+    "key": "445f90b8-86c8-4453-b8fb-4fd97500458f",
+    "files": []
+  }
+}

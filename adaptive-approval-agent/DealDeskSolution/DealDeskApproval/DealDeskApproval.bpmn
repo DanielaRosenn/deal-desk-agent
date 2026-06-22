@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:uipath="http://uipath.org/schema/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="UiPath Maestro (https://uipath.com)" exporterVersion="development">
+  <bpmn:process id="DealDeskApproval" name="Deal Desk Approval">
+    <bpmn:extensionElements>
+      <uipath:variables version="v1">
+        <uipath:inputOutput id="Var_Request" name="request" type="json" elementId="Event_start" />
+        <uipath:inputOutput id="Var_Disposition" name="Var_Disposition" type="string" default="needs_approval" />
+        <uipath:inputOutput id="Var_RecommendedDecision" name="Var_RecommendedDecision" type="string" default="approve" />
+        <uipath:inputOutput id="Var_RoutingRationale" name="Var_RoutingRationale" type="string" />
+        <uipath:inputOutput id="Var_ApproverChain" name="Var_ApproverChain" type="json" />
+        <uipath:inputOutput id="Var_CurrentApproverEmail" name="Var_CurrentApproverEmail" type="string" />
+        <uipath:inputOutput id="Var_CurrentApproverName" name="Var_CurrentApproverName" type="string" />
+        <uipath:inputOutput id="Var_CurrentApproverRole" name="Var_CurrentApproverRole" type="string" />
+        <uipath:inputOutput id="Var_Decision" name="Var_Decision" type="string" />
+        <uipath:inputOutput id="Var_DecisionComments" name="Var_DecisionComments" type="string" />
+        <uipath:inputOutput id="Var_ApprovalResults" name="Var_ApprovalResults" type="jsonSchema"><![CDATA[{"type":"array"}]]></uipath:inputOutput>
+        <uipath:inputOutput id="Var_ResultsSummary" name="Var_ResultsSummary" type="string" />
+        <uipath:inputOutput id="Var_NextAction" name="Var_NextAction" type="string" />
+        <uipath:inputOutput id="Var_FinalOutcome" name="Var_FinalOutcome" type="string" />
+        <uipath:inputOutput id="Var_Escalated" name="Var_Escalated" type="boolean" default="false" />
+        <uipath:inputOutput id="Var_SlaMinutes" name="Var_SlaMinutes" type="number" default="15" />
+        <uipath:inputOutput id="Var_AgentPlan" name="Var_AgentPlan" type="json" />
+        <uipath:inputOutput id="Var_SendResult" name="Var_SendResult" type="json" />
+        <uipath:inputOutput id="Var_HitlApprovalBody" name="Var_HitlApprovalBody" type="json" />
+        <uipath:inputOutput id="Var_ActionResult" name="Var_ActionResult" type="json" />
+        <uipath:inputOutput id="Var_CardHtml" name="Var_CardHtml" type="string" />
+        <uipath:inputOutput id="Var_CardSubject" name="Var_CardSubject" type="string" default="Deal Desk Approval Required" />
+        <uipath:inputOutput id="Var_BridgeUrl" name="Var_BridgeUrl" type="string" default="https://djun97l419cdy.cloudfront.net" />
+        <uipath:inputOutput id="Var_HitlUrl" name="Var_HitlUrl" type="string" default="https://djun97l419cdy.cloudfront.net/api/v1/approvals" />
+        <uipath:inputOutput id="Var_HitlApiKey" name="Var_HitlApiKey" type="string" default="hitl_test_api_key_12345" />
+        <uipath:inputOutput id="Var_CreateApprovalResponse" name="Var_CreateApprovalResponse" type="jsonSchema"><![CDATA[{"type":"object"}]]></uipath:inputOutput>
+        <uipath:inputOutput id="Var_ApprovalId" name="Var_ApprovalId" type="string" />
+        <uipath:inputOutput id="Var_ResponseToken" name="Var_ResponseToken" type="string" />
+        <uipath:inputOutput id="Var_PollResponse" name="Var_PollResponse" type="jsonSchema"><![CDATA[{"type":"object"}]]></uipath:inputOutput>
+        <uipath:inputOutput id="Var_ApprovalStatus" name="Var_ApprovalStatus" type="string" />
+        <uipath:inputOutput id="Var_PollAttempts" name="Var_PollAttempts" type="number" default="0" />
+        <uipath:inputOutput id="Var_CreateUrl" name="Var_CreateUrl" type="string" />
+        <uipath:inputOutput id="Var_CreateHeaders" name="Var_CreateHeaders" type="jsonSchema"><![CDATA[{"type":"object"}]]></uipath:inputOutput>
+        <uipath:inputOutput id="Var_CreateBody" name="Var_CreateBody" type="jsonSchema"><![CDATA[{"type":"object"}]]></uipath:inputOutput>
+        <uipath:inputOutput id="Var_PollUrl" name="Var_PollUrl" type="string" />
+        <uipath:inputOutput id="Var_PollHeaders" name="Var_PollHeaders" type="jsonSchema"><![CDATA[{"type":"object"}]]></uipath:inputOutput>
+        <uipath:inputOutput id="Var_RpaApprovalResult" name="Var_RpaApprovalResult" type="jsonSchema"><![CDATA[{"type":"object"}]]></uipath:inputOutput>
+        <uipath:inputOutput id="Var_ExternalTaskId" name="Var_ExternalTaskId" type="string" />
+        <uipath:inputOutput id="Var_DecidedBy" name="Var_DecidedBy" type="string" />
+        <uipath:inputOutput id="Var_DecidedAt" name="Var_DecidedAt" type="string" />
+        <uipath:inputOutput id="Var_RawDecisionPayload" name="Var_RawDecisionPayload" type="string" />
+        <uipath:inputOutput id="Var_SlackBotToken" name="Var_SlackBotToken" type="string" default="" />
+        <uipath:inputOutput id="Var_SlackChannelId" name="Var_SlackChannelId" type="string" default="" />
+        <uipath:inputOutput id="Var_SlackResult" name="Var_SlackResult" type="jsonSchema"><![CDATA[{"type":"object"}]]></uipath:inputOutput>
+      </uipath:variables>
+      <uipath:bindings version="v1">
+        <uipath:binding id="Binding_OutlookConnection" name="Outlook365" type="connection" resource="Connection" resourceKey="45b3022f-96ef-4ca4-99bb-39f15af717d5" value="45b3022f-96ef-4ca4-99bb-39f15af717d5" />
+        <uipath:binding id="Binding_DataFabricConnection" name="DataFabric" type="connection" resource="Connection" resourceKey="58ec2518-2165-44ff-9646-5170f811a42d" value="58ec2518-2165-44ff-9646-5170f811a42d" />
+        <uipath:binding id="Binding_PlanName" name="DealDeskAgent_plan" resource="process" resourceSubType="Agent" resourceKey="761D42AC-BEDD-4256-885F-E3C650C64018" propertyAttribute="name" value="DealDeskAgent_plan" />
+        <uipath:binding id="Binding_PlanFolder" name="DealDeskAgent_plan" resource="process" resourceSubType="Agent" resourceKey="761D42AC-BEDD-4256-885F-E3C650C64018" propertyAttribute="folderPath" value="Shared/DealDeskApprovalGlobal" />
+        <uipath:binding id="Binding_RenderName" name="DealDeskAgent_render" resource="process" resourceSubType="Agent" resourceKey="1C12455E-6E5A-4DE3-81FE-55654BA1D2E8" propertyAttribute="name" value="DealDeskAgent_render" />
+        <uipath:binding id="Binding_RenderFolder" name="DealDeskAgent_render" resource="process" resourceSubType="Agent" resourceKey="1C12455E-6E5A-4DE3-81FE-55654BA1D2E8" propertyAttribute="folderPath" value="Shared/DealDeskApprovalGlobal" />
+        <uipath:binding id="Binding_ProcessResponseName" name="DealDeskAgent_process_response" resource="process" resourceSubType="Agent" resourceKey="99558773-C1CB-4F4B-994F-8DBB2EB242FD" propertyAttribute="name" value="DealDeskAgent_process_response" />
+        <uipath:binding id="Binding_ProcessResponseFolder" name="DealDeskAgent_process_response" resource="process" resourceSubType="Agent" resourceKey="99558773-C1CB-4F4B-994F-8DBB2EB242FD" propertyAttribute="folderPath" value="Shared/DealDeskApprovalGlobal" />
+        <uipath:binding id="Binding_WaitDecisionName" name="DealDeskApproval_WaitDecision" resource="process" resourceSubType="Process" resourceKey="0932CB58-FC8A-4287-AB2C-410E85075EBC" propertyAttribute="name" value="DealDeskApproval_WaitDecision" />
+        <uipath:binding id="Binding_WaitDecisionFolder" name="DealDeskApproval_WaitDecision" resource="process" resourceSubType="Process" resourceKey="0932CB58-FC8A-4287-AB2C-410E85075EBC" propertyAttribute="folderPath" value="Shared/DealDeskApprovalGlobal" />
+      </uipath:bindings>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="Event_start" name="Opportunity change detected">
+      <bpmn:extensionElements>
+        <uipath:entryPointId value="ffd2e6e3-8dfe-497b-8431-a09be0313615" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_Start_Evaluate</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_EvaluateAndDraft" name="Evaluate and draft (agent plan)">
+      <bpmn:extensionElements>
+        <uipath:activity version="v1">
+          <uipath:type value="Orchestrator.StartJob" version="v1" />
+          <uipath:context>
+            <uipath:input name="ReleaseKey" type="string" value="761D42AC-BEDD-4256-885F-E3C650C64018" />
+            <uipath:input name="FolderKey" type="string" value="5fc9fcc4-7156-40c2-9930-7ce61dbbf78b" />
+            <uipath:input name="folderId" type="string" value="485092" />
+            <uipath:input name="FolderPath" type="string" value="Shared/DealDeskApprovalGlobal" />
+            <uipath:input name="Name" type="string" value="DealDeskAgent_plan" />
+          </uipath:context>
+            <uipath:input name="JobArguments" type="json" target="bodyField"><![CDATA[{"request":"=js:((vars.Var_Request||{}).request || vars.Var_Request)"}]]></uipath:input>
+          <uipath:output name="agentPlan" type="json" var="Var_AgentPlan" source="=result" />
+          <uipath:output name="request" type="json" var="Var_Request" source="=result.request" />
+          <uipath:output name="disposition" type="string" var="Var_Disposition" source="=result.disposition" />
+          <uipath:output name="approvers" type="json" var="Var_ApproverChain" source="=result.approvers" />
+          <uipath:output name="recommendedDecision" type="string" var="Var_RecommendedDecision" source="=result.recommended_decision" />
+        </uipath:activity>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Start_Evaluate</bpmn:incoming>
+      <bpmn:outgoing>Flow_Evaluate_Disposition</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_Disposition" name="disposition?" default="Flow_Disp_Exception">
+      <bpmn:incoming>Flow_Evaluate_Disposition</bpmn:incoming>
+      <bpmn:outgoing>Flow_Disp_NeedsApproval</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Disp_AutoClear</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Disp_Exception</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:subProcess id="SubProcess_Approvers" name="Per-approver approval (sequential)">
+      <bpmn:incoming>Flow_Disp_NeedsApproval</bpmn:incoming>
+      <bpmn:outgoing>Flow_Approvers_ProcessDecision</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics id="Loop_Approvers" isSequential="true">
+        <bpmn:extensionElements>
+          <uipath:loopCharacteristics inputCollection="=vars.Var_ApproverChain" inputElement="iterator[0]" version="v1" />
+        </bpmn:extensionElements>
+        <bpmn:completionCondition xsi:type="bpmn:tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">=js:['reject','rejected','deny','denied','declined'].indexOf(String(vars.Var_Decision||'').toLowerCase()) &gt;= 0</bpmn:completionCondition>
+      </bpmn:multiInstanceLoopCharacteristics>
+      <bpmn:startEvent id="Sub_Start">
+        <bpmn:outgoing>Flow_Sub_BuildBody</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="Task_BuildApprovalBody" name="Generate approval card (render agent)">
+        <bpmn:extensionElements>
+          <uipath:activity version="v1">
+            <uipath:type value="Orchestrator.StartJob" version="v1" />
+            <uipath:context>
+              <uipath:input name="ReleaseKey" type="string" value="1C12455E-6E5A-4DE3-81FE-55654BA1D2E8" />
+              <uipath:input name="FolderKey" type="string" value="5fc9fcc4-7156-40c2-9930-7ce61dbbf78b" />
+              <uipath:input name="folderId" type="string" value="485092" />
+              <uipath:input name="FolderPath" type="string" value="Shared/DealDeskApprovalGlobal" />
+              <uipath:input name="Name" type="string" value="DealDeskAgent_render" />
+            </uipath:context>
+            <uipath:input name="JobArguments" type="json" target="bodyField"><![CDATA[{"request":"=js:((vars.Var_Request||{}).request || vars.Var_Request)","approver":"=iterator[0].item","history":[]}]]></uipath:input>
+            <uipath:output name="cardHtml" type="string" var="Var_CardHtml" source="=result.html" />
+            <uipath:output name="cardSubject" type="string" var="Var_CardSubject" source="=result.subject" />
+            <uipath:output name="currentApproverEmail" type="string" var="Var_CurrentApproverEmail" source="=result.approver.email" />
+            <uipath:output name="currentApproverName" type="string" var="Var_CurrentApproverName" source="=result.approver.display_name" />
+            <uipath:output name="currentApproverRole" type="string" var="Var_CurrentApproverRole" source="=result.approver.role" />
+          </uipath:activity>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_Sub_BuildBody</bpmn:incoming>
+        <bpmn:outgoing>Flow_BuildBody_WaitDecision</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <!-- WaitDecision RPA: creates Action Center task, posts to HITL, sends email, waits for decision, returns result -->
+      <bpmn:serviceTask id="Task_CreateApproval" name="Wait for approval decision (Action Center + HITL RPA)">
+        <bpmn:extensionElements>
+          <uipath:activity version="v1">
+            <uipath:type value="Orchestrator.StartJob" version="v1" />
+            <uipath:context>
+              <uipath:input name="ReleaseKey" type="string" value="0932CB58-FC8A-4287-AB2C-410E85075EBC" />
+              <uipath:input name="FolderKey" type="string" value="5fc9fcc4-7156-40c2-9930-7ce61dbbf78b" />
+              <uipath:input name="folderId" type="string" value="485092" />
+              <uipath:input name="FolderPath" type="string" value="Shared/DealDeskApprovalGlobal" />
+              <uipath:input name="Name" type="string" value="DealDeskApproval_WaitDecision" />
+            </uipath:context>
+            <uipath:input name="JobArguments" type="json" target="bodyField"><![CDATA[{"in_ApprovalBodyJson":"=js:JSON.stringify({processId:'DealDeskApproval',process_id:'DealDeskApproval',externalRef:String(((vars.Var_Request||{}).approval_id)||((vars.Var_Request||{}).request||{}).approval_id||''),title:String(vars.Var_CardSubject||'Deal Desk Approval Required'),approvalType:'sequential',approval_type:'sequential',priority:'normal',notificationChannel:'both',notification_channel:'both',approvalUrlBase:String(vars.Var_BridgeUrl||'https://djun97l419cdy.cloudfront.net'),metadata:{approval_id:String(((vars.Var_Request||{}).approval_id)||''),approver_role:String(vars.Var_CurrentApproverRole||''),approver_index:String(Number(((iterator[0]||{}).loopCounter)||0)),source:'DealDeskApproval.bpmn'},formSchema:[{name:'approval_id',label:'Approval ID',type:'text',required:false},{name:'customer',label:'Customer',type:'text',required:false},{name:'amount',label:'Amount',type:'text',required:false},{name:'discount',label:'Discount %',type:'text',required:false},{name:'requester',label:'Requester',type:'text',required:false},{name:'churn_risk',label:'Churn risk',type:'text',required:false},{name:'customer_tier',label:'Customer tier',type:'text',required:false},{name:'health_score',label:'Health score',type:'text',required:false},{name:'renewal_term_months',label:'Renewal term (months)',type:'text',required:false},{name:'competitor_involved',label:'Competitor involved',type:'text',required:false},{name:'recommended_decision',label:'Recommended Decision',type:'text',required:false},{name:'rationale',label:'Rationale',type:'text',required:false},{name:'comments',label:'Comments',type:'text',required:false}],formData:{approval_id:String(((vars.Var_Request||{}).approval_id)||((vars.Var_Request||{}).request||{}).approval_id||''),customer:String((((vars.Var_Request||{}).raw_payload||{}).Opportunity||{}).Name||(((vars.Var_Request||{}).request||{}).raw_payload||{}).Opportunity&&(((vars.Var_Request||{}).request||{}).raw_payload||{}).Opportunity.Name||''),amount:String((((vars.Var_Request||{}).raw_payload||{}).Opportunity||{}).Amount||''),discount:String((((vars.Var_Request||{}).raw_payload||{}).Opportunity||{}).Discount__c||''),recommended_decision:String(vars.Var_RecommendedDecision||''),rationale:String(((vars.Var_AgentPlan||{}).rationale)||''),requester:String(vars.Var_CurrentApproverEmail||'daniela.rosenstein@catonetworks.com'),churn_risk:String((((vars.Var_Request||{}).raw_payload||{}).Opportunity||{}).Churn_Risk__c||''),customer_tier:String((((vars.Var_Request||{}).raw_payload||{}).Opportunity||{}).Customer_Tier__c||''),health_score:String((((vars.Var_Request||{}).raw_payload||{}).Opportunity||{}).Health_Score__c||''),renewal_term_months:String((((vars.Var_Request||{}).raw_payload||{}).Opportunity||{}).Renewal_Term__c||''),competitor_involved:String((((vars.Var_Request||{}).raw_payload||{}).Opportunity||{}).Competitor_Involved__c||'')},approvers:[{email:String(vars.Var_CurrentApproverEmail||'daniela.rosenstein@catonetworks.com'),name:String(vars.Var_CurrentApproverName||vars.Var_CurrentApproverEmail||'Approver'),sequenceOrder:1,notificationChannel:'both',notification_channel:'both'}],orchestrator_folder_id:485092,orchestrator_process_key:'DealDeskApproval',approval_step:String(vars.Var_CurrentApproverRole||'manager')})","in_HitlApiKey":"=vars.Var_HitlApiKey","in_HitlApiUrl":"=js:String(vars.Var_HitlUrl||'').replace(/\\/api\\/v1\\/approvals\\/?$/,'')","in_OrchestratorFolderId":485092,"in_SlackBotToken":"=js:String(vars.Var_SlackBotToken||'')"}]]></uipath:input>
+            <uipath:output name="rpaApprovalResult" type="jsonSchema" source="=result" var="Var_RpaApprovalResult" />
+            <uipath:output name="approvalId" type="string" source="=result.out_HitlApprovalId" var="Var_ApprovalId" />
+            <uipath:output name="responseToken" type="string" source="=result.out_ResponseToken" var="Var_ResponseToken" />
+            <uipath:output name="approverEmail" type="string" source="=result.out_ApproverEmail" var="Var_CurrentApproverEmail" />
+            <uipath:output name="decision" type="string" source="=result.out_Decision" var="Var_Decision" />
+            <uipath:output name="decisionComments" type="string" source="=result.out_DecisionComments" var="Var_DecisionComments" />
+          </uipath:activity>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_BuildBody_WaitDecision</bpmn:incoming>
+        <bpmn:outgoing>Flow_WaitDecision_Record</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:scriptTask id="Task_RecordApprovalStep" name="Record manager decision" scriptFormat="JavaScript">
+        <bpmn:extensionElements>
+          <uipath:scriptVersion value="v3" />
+          <uipath:mapping version="v1">
+            <uipath:type value="BPMN.ScriptTask" version="v1" />
+            <uipath:context>
+              <uipath:inputSchema><![CDATA[{"type":"object","properties":{"approvalResults":{"type":"array"},"approverEmail":{"type":"string"},"approverName":{"type":"string"},"approverRole":{"type":"string"},"decision":{"type":"string"},"comments":{"type":"string"},"approvalId":{"type":"string"},"approverIndex":{"type":"number"}}}]]></uipath:inputSchema>
+            </uipath:context>
+            <uipath:input name="args" type="json" target="bodyField"><![CDATA[{"approvalResults":"=vars.Var_ApprovalResults","approverEmail":"=vars.Var_CurrentApproverEmail","approverName":"=vars.Var_CurrentApproverName","approverRole":"=vars.Var_CurrentApproverRole","decision":"=vars.Var_Decision","comments":"=vars.Var_DecisionComments","approvalId":"=vars.Var_ApprovalId","approverIndex":"=js:Number(((iterator[0]||{}).loopCounter)||0)"}]]></uipath:input>
+            <uipath:output name="approvalResultsOut" type="jsonSchema" var="Var_ApprovalResults" source="=result.approvalResults" />
+            <uipath:output name="resultsSummaryOut" type="string" var="Var_ResultsSummary" source="=result.resultsSummary" />
+            <uipath:output name="approvalStatusOut" type="string" var="Var_ApprovalStatus" source="=result.approvalStatus" />
+          </uipath:mapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_WaitDecision_Record</bpmn:incoming>
+        <bpmn:outgoing>Flow_Record_SubEnd</bpmn:outgoing>
+        <bpmn:script><![CDATA[
+const input = (typeof args !== "undefined" && args) ? args : {};
+const existing = Array.isArray(input.approvalResults)
+  ? input.approvalResults.slice()
+  : ((typeof approvalResults !== "undefined" && Array.isArray(approvalResults))
+    ? approvalResults.slice()
+    : []);
+const decisionNorm = String(input.decision ||
+  ((typeof decision !== "undefined" && decision) ? decision : "")).toLowerCase().trim();
+const approvalStatus = (["approve","approved"].indexOf(decisionNorm) >= 0) ? "approved"
+  : (["reject","rejected","deny","denied","decline","declined"].indexOf(decisionNorm) >= 0) ? "rejected"
+  : decisionNorm || "pending";
+existing.push({
+  approvalId: String(input.approvalId || ""),
+  approverIndex: Number(input.approverIndex || existing.length),
+  role: String(input.approverRole ||
+    ((typeof approverRole !== "undefined" && approverRole) ? approverRole : "")),
+  approverName: String(
+    input.approverName ||
+    ((typeof approverName !== "undefined" && approverName) ? approverName : "") ||
+    input.approverEmail ||
+    ((typeof approverEmail !== "undefined" && approverEmail) ? approverEmail : "")
+  ),
+  approverEmail: String(input.approverEmail ||
+    ((typeof approverEmail !== "undefined" && approverEmail) ? approverEmail : "")),
+  decision: decisionNorm,
+  comments: String(input.comments ||
+    ((typeof comments !== "undefined" && comments) ? comments : "")),
+  decidedAt: new Date().toISOString()
+});
+const lines = existing.map((item, i) => {
+  const roleText = item.role ? " [" + item.role + "]" : "";
+  const commentText = item.comments ? " - " + item.comments : "";
+  return String(i + 1) + ". " + (item.approverName || item.approverEmail || "Approver") + roleText + ": " + (item.decision || "pending") + commentText;
+});
+const summary = lines.length > 0 ? lines.join("\\n") : "No decisions recorded yet.";
+return { approvalResults: existing, resultsSummary: summary, approvalStatus: approvalStatus };
+]]></bpmn:script>
+      </bpmn:scriptTask>
+      <bpmn:endEvent id="Sub_End">
+        <bpmn:incoming>Flow_Record_SubEnd</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_Sub_BuildBody" sourceRef="Sub_Start" targetRef="Task_BuildApprovalBody" />
+      <bpmn:sequenceFlow id="Flow_BuildBody_WaitDecision" sourceRef="Task_BuildApprovalBody" targetRef="Task_CreateApproval" />
+      <bpmn:sequenceFlow id="Flow_WaitDecision_Record" sourceRef="Task_CreateApproval" targetRef="Task_RecordApprovalStep" />
+      <bpmn:sequenceFlow id="Flow_Record_SubEnd" sourceRef="Task_RecordApprovalStep" targetRef="Sub_End" />
+    </bpmn:subProcess>
+    <bpmn:serviceTask id="Task_ProcessDecision" name="Process decision (agent)">
+      <bpmn:extensionElements>
+        <uipath:activity version="v1">
+          <uipath:type value="Orchestrator.StartJob" version="v1" />
+          <uipath:context>
+            <uipath:input name="ReleaseKey" type="string" value="99558773-C1CB-4F4B-994F-8DBB2EB242FD" />
+            <uipath:input name="FolderKey" type="string" value="5fc9fcc4-7156-40c2-9930-7ce61dbbf78b" />
+            <uipath:input name="folderId" type="string" value="485092" />
+            <uipath:input name="FolderPath" type="string" value="Shared/DealDeskApprovalGlobal" />
+            <uipath:input name="Name" type="string" value="DealDeskAgent_process_response" />
+          </uipath:context>
+          <uipath:input name="JobArguments" type="json" target="bodyField"><![CDATA[{"request":"=js:((vars.Var_Request||{}).request || vars.Var_Request)","routing_plan":"=js:({approvers:((vars.Var_AgentPlan||{}).approvers)||[],rationale:((vars.Var_AgentPlan||{}).rationale)||'',disposition:((vars.Var_AgentPlan||{}).disposition)||'',risk_score:((vars.Var_AgentPlan||{}).risk_score) ?? 0,recommended_decision:((vars.Var_AgentPlan||{}).recommended_decision)||'',recommendation_rationale:((vars.Var_AgentPlan||{}).recommendation_rationale)||'',guardrail_violations_corrected:((vars.Var_AgentPlan||{}).guardrail_violations_corrected)||[]})","current_approver_index":"=js:Math.max(0,Number((Array.isArray(vars.Var_ApprovalResults)?vars.Var_ApprovalResults.length:1)-1))","response":{"approver_id":"=vars.Var_CurrentApproverEmail","approver_email":"=vars.Var_CurrentApproverEmail","decision":"=js:String(vars.Var_Decision||'escalate')","comments":"=js:String(vars.Var_DecisionComments||'')","responded_at":"=js:new Date().toISOString()","channel":"outlook"},"history":"=js:(Array.isArray(vars.Var_ApprovalResults)?vars.Var_ApprovalResults:[])"}]]></uipath:input>
+          <uipath:output name="nextAction" type="string" var="Var_NextAction" source="=result.next_action" />
+          <uipath:output name="finalOutcome" type="string" var="Var_FinalOutcome" source="=result.next_action" />
+        </uipath:activity>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Approvers_ProcessDecision</bpmn:incoming>
+      <bpmn:outgoing>Flow_ProcessDecision_Notify</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="Task_NotifyRequester" name="Notify requester (Outlook)">
+      <bpmn:extensionElements>
+        <uipath:activity version="v1">
+          <uipath:type value="Intsvc.ActivityExecution" version="v1" />
+          <uipath:context>
+            <uipath:input name="connectorKey" type="string" value="uipath-microsoft-outlook365" />
+            <uipath:input name="activity" type="string" value="SendEmailV2" />
+            <uipath:input name="objectName" type="string" value="send-mail" />
+            <uipath:input name="method" type="string" value="POST" />
+            <uipath:input name="path" type="string" value="/hubs/productivity/send-mail" />
+            <uipath:input name="connection" type="resource" value="45b3022f-96ef-4ca4-99bb-39f15af717d5" />
+            <uipath:input name="folderKey" type="string" value="5fc9fcc4-7156-40c2-9930-7ce61dbbf78b" />
+            </uipath:context>
+          <uipath:input name="Body" type="json" target="body"><![CDATA[{"Message":{"Subject":"Deal Desk Approval Decision Summary","ToRecipients":[{"EmailAddress":{"Address":"daniela.rosenstein@catonetworks.com"}}],"Body":{"ContentType":"HTML","Content":"=js:String(vars.Var_CardHtml || '<html><body style=\"font-family:Segoe UI,Arial,sans-serif\"><h3>Deal Desk Approval Decision Summary</h3><p>The approval process has completed. Please review the decisions in the portal.</p></body></html>')"}},"SaveToSentItems":true}]]></uipath:input>
+          <uipath:output name="result" type="custom" source="." var="Var_SendResult" />
+        </uipath:activity>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ProcessDecision_Notify</bpmn:incoming>
+      <bpmn:incoming>Flow_Disp_AutoClear</bpmn:incoming>
+      <bpmn:incoming>Flow_Disp_Exception</bpmn:incoming>
+      <bpmn:outgoing>Flow_Notify_Slack</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:scriptTask id="Task_SlackNotify" name="Notify Slack (DM daniela.rosenstein) — final outcome" scriptFormat="JavaScript">
+      <bpmn:extensionElements>
+        <uipath:scriptVersion value="v3" />
+        <uipath:mapping version="v1">
+          <uipath:type value="BPMN.ScriptTask" version="v1" />
+          <uipath:context>
+            <uipath:inputSchema><![CDATA[{"type":"object","properties":{"botToken":{"type":"string"},"channelId":{"type":"string"},"request":{"type":"object"},"finalOutcome":{"type":"string"},"approvalResults":{"type":"array"},"recommendedDecision":{"type":"string"},"disposition":{"type":"string"}}}]]></uipath:inputSchema>
+          </uipath:context>
+          <uipath:input name="args" type="json" target="bodyField"><![CDATA[{"botToken":"=vars.Var_SlackBotToken","channelId":"=vars.Var_SlackChannelId","request":"=vars.Var_Request","finalOutcome":"=js:String(vars.Var_FinalOutcome||vars.Var_Disposition||'')","approvalResults":"=vars.Var_ApprovalResults","recommendedDecision":"=js:String(vars.Var_RecommendedDecision||'')","disposition":"=js:String(vars.Var_Disposition||'')"}]]></uipath:input>
+          <uipath:output name="slackResult" type="jsonSchema" var="Var_SlackResult" source="=result.response" />
+        </uipath:mapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Notify_Slack</bpmn:incoming>
+      <bpmn:outgoing>Flow_Slack_Record</bpmn:outgoing>
+      <bpmn:script><![CDATA[
+const input = (typeof args !== "undefined" && args) ? args : {};
+const token = String(input.botToken || "");
+const RECIPIENT_EMAIL = "daniela.rosenstein@catonetworks.com";
+if (!token) { return { response: { ok: false, skipped: true, reason: "no_token_configured" } }; }
+const req = input.request || {};
+const rawReq = (typeof req.request === "object" ? req.request : req) || {};
+const opp = ((rawReq.raw_payload || {}).Opportunity) || {};
+const results = Array.isArray(input.approvalResults) ? input.approvalResults : [];
+const last = results.length ? results[results.length - 1] : {};
+const outcome = String(input.finalOutcome || last.decision || input.disposition || "unknown");
+const outcomeUpper = outcome.toUpperCase();
+const isApproved = ["approve","approved","auto_clear"].indexOf(outcome.toLowerCase()) >= 0;
+const isRejected = ["reject","rejected","deny","denied"].indexOf(outcome.toLowerCase()) >= 0;
+const emoji = isApproved ? ":white_check_mark:" : isRejected ? ":x:" : ":warning:";
+const trail = results.length
+  ? results.map((r, i) => (i + 1) + ". " + (r.approverName || r.approverEmail || "Approver") + ": *" + (r.decision || "pending") + "*" + (r.comments ? " — " + r.comments : "")).join("\n")
+  : "No manager approvals recorded.";
+const text = emoji + " *Deal Desk Approval — Final Outcome: " + outcomeUpper + "*\n" +
+  "*Opportunity:* " + (opp.Name || rawReq.approval_id || "Unknown") + "\n" +
+  "*Amount:* $" + (opp.Amount || rawReq.amount || "N/A") + "\n" +
+  "*Recommended:* " + (input.recommendedDecision || "N/A") + "\n" +
+  "*Approval trail:*\n" + trail;
+function safeParse(r) {
+  try {
+    const raw = (typeof r === "string") ? r : (r.body || r.text || "{}");
+    return JSON.parse(raw);
+  } catch(e) { return {}; }
+}
+try {
+  const lookupR = fetch("https://slack.com/api/users.lookupByEmail?email=" + encodeURIComponent(RECIPIENT_EMAIL), {
+    method: "GET",
+    headers: { "Authorization": "Bearer " + token }
+  });
+  const lookupJson = safeParse(lookupR);
+  const userId = (lookupJson.user || {}).id;
+  if (!userId) { return { response: { ok: false, error: "user_not_found", email: RECIPIENT_EMAIL, outcome: outcome } }; }
+  const openR = fetch("https://slack.com/api/conversations.open", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+    body: JSON.stringify({ users: userId })
+  });
+  const openJson = safeParse(openR);
+  const dmChannel = ((openJson.channel || {}).id);
+  if (!dmChannel) { return { response: { ok: false, error: "dm_open_failed", outcome: outcome } }; }
+  fetch("https://slack.com/api/chat.postMessage", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+    body: JSON.stringify({ channel: dmChannel, text: text, mrkdwn: true })
+  });
+  return { response: { ok: true, posted: true, outcome: outcome, recipient: RECIPIENT_EMAIL } };
+} catch(e) {
+  return { response: { ok: false, error: String(e), outcome: outcome } };
+}
+]]></bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sendTask id="Task_RecordDecision" name="Record decision (Data Fabric ApprovalAudit)">
+      <bpmn:extensionElements>
+        <uipath:activity version="v1">
+          <uipath:type value="Intsvc.ActivityExecution" version="v1" />
+          <uipath:context>
+            <uipath:input name="connectorKey" type="string" value="uipath-uipath-dataservice" />
+            <uipath:input name="activity" type="string" value="CreateEntityRecordCurated" />
+            <uipath:input name="objectName" type="string" value="CreateEntityRecordCurated" />
+            <uipath:input name="method" type="string" value="POST" />
+            <uipath:input name="path" type="string" value="/v2/ApprovalAudit/CreateEntityRecord" />
+            <uipath:input name="entityName" type="string" value="ApprovalAudit" />
+            <uipath:input name="connection" type="resource" value="58ec2518-2165-44ff-9646-5170f811a42d" />
+            <uipath:input name="folderKey" type="string" value="5fc9fcc4-7156-40c2-9930-7ce61dbbf78b" />
+          </uipath:context>
+          <uipath:input name="Body" type="json" target="bodyField"><![CDATA[{"disposition":"=js:(vars.Var_AgentPlan||{}).disposition || vars.Var_Disposition || ''","recommendedDecision":"=js:(vars.Var_AgentPlan||{}).recommended_decision || vars.Var_RecommendedDecision || ''","decision":"=js:(function(){const results=Array.isArray(vars.Var_ApprovalResults)?vars.Var_ApprovalResults:[];const last=results.length?results[results.length-1]:{};return String(last.decision||vars.Var_FinalOutcome||vars.Var_Disposition||'');})()","finalOutcome":"=js:(function(){const summary=String(vars.Var_ResultsSummary||'');const results=Array.isArray(vars.Var_ApprovalResults)?vars.Var_ApprovalResults:[];const last=results.length?results[results.length-1]:{};const decision=String(last.decision||vars.Var_FinalOutcome||vars.Var_Disposition||'');return decision + (summary ? (' | '+summary) : '');})()","approvalTrail":"=js:(Array.isArray(vars.Var_ApprovalResults)?JSON.stringify(vars.Var_ApprovalResults):'[]')","escalated":"=js:vars.Var_Escalated === true || vars.Var_NextAction === 'escalate'"}]]></uipath:input>
+        </uipath:activity>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Slack_Record</bpmn:incoming>
+      <bpmn:outgoing>Flow_Record_End</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="End_Done" name="Closed">
+      <bpmn:incoming>Flow_Record_End</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_Start_Evaluate" sourceRef="Event_start" targetRef="Task_EvaluateAndDraft" />
+    <bpmn:sequenceFlow id="Flow_Evaluate_Disposition" sourceRef="Task_EvaluateAndDraft" targetRef="Gateway_Disposition" />
+    <bpmn:sequenceFlow id="Flow_Disp_NeedsApproval" name="needs_approval" sourceRef="Gateway_Disposition" targetRef="SubProcess_Approvers">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">=vars.Var_Disposition == "needs_approval"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Disp_AutoClear" name="auto_clear" sourceRef="Gateway_Disposition" targetRef="Task_NotifyRequester">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">=vars.Var_Disposition == "auto_clear"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Disp_Exception" name="exception" sourceRef="Gateway_Disposition" targetRef="Task_NotifyRequester" />
+    <bpmn:sequenceFlow id="Flow_Approvers_ProcessDecision" sourceRef="SubProcess_Approvers" targetRef="Task_ProcessDecision" />
+    <bpmn:sequenceFlow id="Flow_ProcessDecision_Notify" sourceRef="Task_ProcessDecision" targetRef="Task_NotifyRequester" />
+    <bpmn:sequenceFlow id="Flow_Notify_Slack" sourceRef="Task_NotifyRequester" targetRef="Task_SlackNotify" />
+    <bpmn:sequenceFlow id="Flow_Slack_Record" sourceRef="Task_SlackNotify" targetRef="Task_RecordDecision" />
+    <bpmn:sequenceFlow id="Flow_Record_End" sourceRef="Task_RecordDecision" targetRef="End_Done" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_1">
+    <bpmndi:BPMNPlane id="Plane_1" bpmnElement="DealDeskApproval">
+      <bpmndi:BPMNShape id="S_Event_start" bpmnElement="Event_start">
+        <dc:Bounds x="160" y="180" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="140" y="223" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_EvaluateAndDraft" bpmnElement="Task_EvaluateAndDraft">
+        <dc:Bounds x="250" y="158" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Gateway_Disposition" bpmnElement="Gateway_Disposition" isMarkerVisible="true">
+        <dc:Bounds x="425" y="173" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="420" y="143" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_SubProcess_Approvers" bpmnElement="SubProcess_Approvers" isExpanded="true">
+        <dc:Bounds x="500" y="65" width="540" height="275" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Sub_Start" bpmnElement="Sub_Start">
+        <dc:Bounds x="515" y="178" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_BuildApprovalBody" bpmnElement="Task_BuildApprovalBody">
+        <dc:Bounds x="560" y="156" width="90" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_CreateApproval" bpmnElement="Task_CreateApproval">
+        <dc:Bounds x="680" y="156" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_RecordApprovalStep" bpmnElement="Task_RecordApprovalStep">
+        <dc:Bounds x="830" y="156" width="105" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Sub_End" bpmnElement="Sub_End">
+        <dc:Bounds x="975" y="178" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_ProcessDecision" bpmnElement="Task_ProcessDecision">
+        <dc:Bounds x="1065" y="158" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_NotifyRequester" bpmnElement="Task_NotifyRequester">
+        <dc:Bounds x="1245" y="158" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_SlackNotify" bpmnElement="Task_SlackNotify">
+        <dc:Bounds x="1405" y="158" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_Task_RecordDecision" bpmnElement="Task_RecordDecision">
+        <dc:Bounds x="1565" y="158" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S_End_Done" bpmnElement="End_Done">
+        <dc:Bounds x="1725" y="180" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="E_Flow_Start_Evaluate" bpmnElement="Flow_Start_Evaluate">
+        <di:waypoint x="196" y="198" /><di:waypoint x="250" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Evaluate_Disposition" bpmnElement="Flow_Evaluate_Disposition">
+        <di:waypoint x="370" y="198" /><di:waypoint x="425" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Disp_NeedsApproval" bpmnElement="Flow_Disp_NeedsApproval">
+        <di:waypoint x="475" y="198" /><di:waypoint x="500" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Disp_AutoClear" bpmnElement="Flow_Disp_AutoClear">
+        <di:waypoint x="450" y="173" /><di:waypoint x="450" y="45" /><di:waypoint x="1305" y="45" /><di:waypoint x="1305" y="158" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Disp_Exception" bpmnElement="Flow_Disp_Exception">
+        <di:waypoint x="450" y="223" /><di:waypoint x="450" y="385" /><di:waypoint x="1305" y="385" /><di:waypoint x="1305" y="238" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Approvers_ProcessDecision" bpmnElement="Flow_Approvers_ProcessDecision">
+        <di:waypoint x="1040" y="202" /><di:waypoint x="1065" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_ProcessDecision_Notify" bpmnElement="Flow_ProcessDecision_Notify">
+        <di:waypoint x="1205" y="198" /><di:waypoint x="1245" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Notify_Slack" bpmnElement="Flow_Notify_Slack">
+        <di:waypoint x="1365" y="198" /><di:waypoint x="1405" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Slack_Record" bpmnElement="Flow_Slack_Record">
+        <di:waypoint x="1525" y="198" /><di:waypoint x="1565" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Record_End" bpmnElement="Flow_Record_End">
+        <di:waypoint x="1685" y="198" /><di:waypoint x="1725" y="198" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Sub_BuildBody" bpmnElement="Flow_Sub_BuildBody">
+        <di:waypoint x="551" y="196" /><di:waypoint x="560" y="196" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_BuildBody_WaitDecision" bpmnElement="Flow_BuildBody_WaitDecision">
+        <di:waypoint x="650" y="196" /><di:waypoint x="680" y="196" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_WaitDecision_Record" bpmnElement="Flow_WaitDecision_Record">
+        <di:waypoint x="800" y="196" /><di:waypoint x="830" y="196" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="E_Flow_Record_SubEnd" bpmnElement="Flow_Record_SubEnd">
+        <di:waypoint x="935" y="196" /><di:waypoint x="975" y="196" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,14 @@
+You interpret approver response and decide next action.
+
+Request:
+{request_json}
+
+Routing plan:
+{routing_plan_json}
+
+Current approver index: {current_approver_index}
+Response:
+{response_json}
+
+Return JSON that matches DecisionOutcome schema:
+{decision_outcome_schema}

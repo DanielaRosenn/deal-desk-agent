@@ -1,0 +1,156 @@
+{
+  "process_type": "rpc",
+  "version": "1.0.1",
+  "fields": {
+    "deal.customer_name": {
+      "label": "Customer",
+      "source": "salesforce",
+      "path": "Opportunity.Account.Name",
+      "type": "string",
+      "formatter": "string",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "high",
+      "description": "Customer account name"
+    },
+    "deal.discount_pct": {
+      "label": "Discount",
+      "source": "salesforce",
+      "path": "Opportunity.Discount__c",
+      "type": "number",
+      "formatter": "percentage",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "high",
+      "computed_attributes": ["is_above_threshold"],
+      "description": "Discount percentage off list price"
+    },
+    "deal.value_usd": {
+      "label": "Deal value",
+      "source": "salesforce",
+      "path": "Opportunity.Amount",
+      "type": "number",
+      "formatter": "currency_usd",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "high",
+      "description": "Total contract value in USD"
+    },
+    "deal.opportunity_type": {
+      "label": "Opportunity type",
+      "source": "salesforce",
+      "path": "Opportunity.Type",
+      "type": "string",
+      "formatter": "string",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "medium",
+      "description": "Renewal / New Business / Upsell"
+    },
+    "deal.account_industry": {
+      "label": "Industry",
+      "source": "salesforce",
+      "path": "Opportunity.Account.Industry",
+      "type": "string",
+      "formatter": "string",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "medium",
+      "description": "Account industry (sector)"
+    },
+    "deal.renewal_term_months": {
+      "label": "Renewal term (months)",
+      "source": "salesforce",
+      "path": "Opportunity.Renewal_Term__c",
+      "type": "number",
+      "formatter": "string",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "medium",
+      "description": "Committed renewal term in months"
+    },
+    "deal.churn_risk": {
+      "label": "Churn risk",
+      "source": "salesforce",
+      "path": "Opportunity.Churn_Risk__c",
+      "type": "string",
+      "formatter": "string",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "high",
+      "description": "High / Medium / Low churn risk"
+    },
+    "deal.customer_tier": {
+      "label": "Customer tier",
+      "source": "salesforce",
+      "path": "Opportunity.Customer_Tier__c",
+      "type": "string",
+      "formatter": "string",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "high",
+      "description": "Strategic / Enterprise / Commercial / SMB"
+    },
+    "deal.multi_year_commit": {
+      "label": "Multi-year commitment",
+      "source": "salesforce",
+      "path": "Opportunity.Multi_Year_Discount__c",
+      "type": "boolean",
+      "formatter": "boolean_yes_no",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "medium",
+      "description": "Customer committed to multi-year term"
+    },
+    "deal.competitor_involved": {
+      "label": "Competitor involved",
+      "source": "salesforce",
+      "path": "Opportunity.Competitor_Involved__c",
+      "type": "boolean",
+      "formatter": "boolean_yes_no",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "high",
+      "description": "Active competitive threat on the deal"
+    },
+    "deal.current_arr": {
+      "label": "Current ARR",
+      "source": "salesforce",
+      "path": "Opportunity.Current_ARR__c",
+      "type": "number",
+      "formatter": "currency_usd",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "high",
+      "description": "Current annual recurring revenue"
+    },
+    "deal.health_score": {
+      "label": "Health score",
+      "source": "salesforce",
+      "path": "Opportunity.Health_Score__c",
+      "type": "number",
+      "formatter": "string",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "high",
+      "description": "CSM account health 0-100"
+    },
+    "deal.previous_discount_pct": {
+      "label": "Previous renewal discount",
+      "source": "salesforce",
+      "path": "Opportunity.Previous_Discount__c",
+      "type": "number",
+      "formatter": "percentage",
+      "sensitivity": "internal",
+      "default_visibility": { "manager": "primary", "director": "primary", "vp": "primary", "cfo": "primary" },
+      "decision_weight": "medium",
+      "description": "Discount on prior renewal"
+    }
+  },
+  "personas": {
+    "manager": { "max_primary": 4, "max_expandable": 4, "preferred_channel": "outlook" },
+    "director": { "max_primary": 5, "max_expandable": 6, "preferred_channel": "outlook" },
+    "vp": { "max_primary": 6, "max_expandable": 10, "preferred_channel": "outlook" },
+    "cfo": { "max_primary": 5, "max_expandable": 8, "preferred_channel": "outlook" }
+  }
+}

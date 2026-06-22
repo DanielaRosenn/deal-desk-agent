@@ -1,0 +1,20 @@
+flowchart LR
+  In[/"Opportunity change"/]:::external --> Eval["Agent evaluates"]:::service
+  Eval --> Disp{"disposition"}:::decision
+
+  Disp -->|"<=5% & <=$50k"| P3["auto_clear<br/>0 cards, logged"]:::endOk
+
+  Disp -->|"8% / $40k"| P1a["needs_approval<br/>1 manager"]:::service
+  P1a --> P1b["1 Outlook card"]:::human
+  P1b --> P1c["Approve -> approved"]:::endOk
+
+  Disp -->|"30% / $1.2M"| P2a["needs_approval<br/>manager -> director -> VP -> CFO"]:::service
+  P2a --> P2b["sequential cards<br/>per tier"]:::human
+  P2b --> P2c["per-tier decisions"]:::endOk
+
+  classDef service fill:#EFF6FF,stroke:#3B82F6,color:#1E3A8A,stroke-width:1.5px
+  classDef decision fill:#FFFBEB,stroke:#F59E0B,color:#92400E,stroke-width:2px
+  classDef human fill:#F5F3FF,stroke:#8B5CF6,color:#5B21B6,stroke-width:1.5px
+  classDef external fill:#FAFAFA,stroke:#94A3B8,color:#334155,stroke-width:1.5px
+  classDef endOk fill:#ECFDF5,stroke:#10B981,color:#065F46,stroke-width:2px
+  linkStyle default stroke:#94A3B8,stroke-width:1.5px

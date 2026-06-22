@@ -1,0 +1,734 @@
+{
+    "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+    "$id": "entry-points.json",
+    "entryPoints": [
+        {
+            "filePath": "plan",
+            "uniqueId": "bb3183c9-0544-40c3-9ba9-4ddd415b32cb",
+            "type": "agent",
+            "input": {
+                "type": "object",
+                "properties": {
+                    "input_payload": {
+                        "additionalProperties": true,
+                        "title": "Input Payload",
+                        "type": "object"
+                    },
+                    "request": {
+                        "additionalProperties": true,
+                        "title": "Request",
+                        "type": "object"
+                    },
+                    "context": {
+                        "additionalProperties": true,
+                        "title": "Context",
+                        "type": "object"
+                    },
+                    "draft_plan": {
+                        "additionalProperties": true,
+                        "title": "Draft Plan",
+                        "type": "object"
+                    },
+                    "corrections": {
+                        "items": {},
+                        "title": "Corrections",
+                        "type": "array"
+                    },
+                    "final_plan": {
+                        "additionalProperties": true,
+                        "title": "Final Plan",
+                        "type": "object"
+                    },
+                    "ai_rec": {
+                        "additionalProperties": true,
+                        "title": "Ai Rec",
+                        "type": "object"
+                    },
+                    "disposition": {
+                        "title": "Disposition",
+                        "type": "string"
+                    },
+                    "approvers": {
+                        "items": {},
+                        "title": "Approvers",
+                        "type": "array"
+                    },
+                    "rationale": {
+                        "title": "Rationale",
+                        "type": "string"
+                    },
+                    "recommended_decision": {
+                        "title": "Recommended Decision",
+                        "type": "string"
+                    },
+                    "recommendation_rationale": {
+                        "title": "Recommendation Rationale",
+                        "type": "string"
+                    },
+                    "risk_score": {
+                        "title": "Risk Score",
+                        "type": "number"
+                    },
+                    "guardrail_violations_corrected": {
+                        "items": {},
+                        "title": "Guardrail Violations Corrected",
+                        "type": "array"
+                    }
+                },
+                "required": []
+            },
+            "output": {
+                "type": "object",
+                "properties": {
+                    "input_payload": {
+                        "additionalProperties": true,
+                        "title": "Input Payload",
+                        "type": "object"
+                    },
+                    "request": {
+                        "additionalProperties": true,
+                        "title": "Request",
+                        "type": "object"
+                    },
+                    "context": {
+                        "additionalProperties": true,
+                        "title": "Context",
+                        "type": "object"
+                    },
+                    "draft_plan": {
+                        "additionalProperties": true,
+                        "title": "Draft Plan",
+                        "type": "object"
+                    },
+                    "corrections": {
+                        "items": {},
+                        "title": "Corrections",
+                        "type": "array"
+                    },
+                    "final_plan": {
+                        "additionalProperties": true,
+                        "title": "Final Plan",
+                        "type": "object"
+                    },
+                    "ai_rec": {
+                        "additionalProperties": true,
+                        "title": "Ai Rec",
+                        "type": "object"
+                    },
+                    "disposition": {
+                        "title": "Disposition",
+                        "type": "string"
+                    },
+                    "approvers": {
+                        "items": {},
+                        "title": "Approvers",
+                        "type": "array"
+                    },
+                    "rationale": {
+                        "title": "Rationale",
+                        "type": "string"
+                    },
+                    "recommended_decision": {
+                        "title": "Recommended Decision",
+                        "type": "string"
+                    },
+                    "recommendation_rationale": {
+                        "title": "Recommendation Rationale",
+                        "type": "string"
+                    },
+                    "risk_score": {
+                        "title": "Risk Score",
+                        "type": "number"
+                    },
+                    "guardrail_violations_corrected": {
+                        "items": {},
+                        "title": "Guardrail Violations Corrected",
+                        "type": "array"
+                    }
+                },
+                "required": []
+            },
+            "graph": {
+                "nodes": [
+                    {
+                        "id": "__start__",
+                        "name": "__start__",
+                        "type": "__start__",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "resolve_request",
+                        "name": "resolve_request",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "fetch_context",
+                        "name": "fetch_context",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "load_rules",
+                        "name": "load_rules",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "deterministic_policy",
+                        "name": "deterministic_policy",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "ai_recommendation",
+                        "name": "ai_recommendation",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "validate_and_correct",
+                        "name": "validate_and_correct",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "finalize_plan",
+                        "name": "finalize_plan",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "__end__",
+                        "name": "__end__",
+                        "type": "__end__",
+                        "subgraph": null,
+                        "metadata": {}
+                    }
+                ],
+                "edges": [
+                    {
+                        "source": "__start__",
+                        "target": "resolve_request",
+                        "label": null
+                    },
+                    {
+                        "source": "ai_recommendation",
+                        "target": "validate_and_correct",
+                        "label": null
+                    },
+                    {
+                        "source": "deterministic_policy",
+                        "target": "ai_recommendation",
+                        "label": null
+                    },
+                    {
+                        "source": "fetch_context",
+                        "target": "load_rules",
+                        "label": null
+                    },
+                    {
+                        "source": "load_rules",
+                        "target": "deterministic_policy",
+                        "label": null
+                    },
+                    {
+                        "source": "resolve_request",
+                        "target": "fetch_context",
+                        "label": null
+                    },
+                    {
+                        "source": "validate_and_correct",
+                        "target": "finalize_plan",
+                        "label": null
+                    },
+                    {
+                        "source": "finalize_plan",
+                        "target": "__end__",
+                        "label": null
+                    }
+                ]
+            }
+        },
+        {
+            "filePath": "render",
+            "uniqueId": "3b377290-08f7-4a8b-9600-4715360c160f",
+            "type": "agent",
+            "input": {
+                "type": "object",
+                "properties": {
+                    "request": {
+                        "additionalProperties": true,
+                        "title": "Request",
+                        "type": "object"
+                    },
+                    "approver": {
+                        "additionalProperties": true,
+                        "title": "Approver",
+                        "type": "object"
+                    },
+                    "history": {
+                        "items": {},
+                        "title": "History",
+                        "type": "array"
+                    },
+                    "context": {
+                        "additionalProperties": true,
+                        "title": "Context",
+                        "type": "object"
+                    },
+                    "approver_profile": {
+                        "additionalProperties": true,
+                        "title": "Approver Profile",
+                        "type": "object"
+                    },
+                    "ai_card_draft": {
+                        "additionalProperties": true,
+                        "title": "Ai Card Draft",
+                        "type": "object"
+                    },
+                    "draft_spec": {
+                        "additionalProperties": true,
+                        "title": "Draft Spec",
+                        "type": "object"
+                    },
+                    "enforced_spec": {
+                        "additionalProperties": true,
+                        "title": "Enforced Spec",
+                        "type": "object"
+                    },
+                    "corrections": {
+                        "items": {},
+                        "title": "Corrections",
+                        "type": "array"
+                    },
+                    "used_safe_mode": {
+                        "title": "Used Safe Mode",
+                        "type": "boolean"
+                    },
+                    "rendered_card": {
+                        "additionalProperties": true,
+                        "title": "Rendered Card",
+                        "type": "object"
+                    },
+                    "subject": {
+                        "title": "Subject",
+                        "type": "string"
+                    },
+                    "html": {
+                        "title": "Html",
+                        "type": "string"
+                    },
+                    "card": {
+                        "additionalProperties": true,
+                        "title": "Card",
+                        "type": "object"
+                    },
+                    "approver_email": {
+                        "title": "Approver Email",
+                        "type": "string"
+                    }
+                },
+                "required": []
+            },
+            "output": {
+                "type": "object",
+                "properties": {
+                    "request": {
+                        "additionalProperties": true,
+                        "title": "Request",
+                        "type": "object"
+                    },
+                    "approver": {
+                        "additionalProperties": true,
+                        "title": "Approver",
+                        "type": "object"
+                    },
+                    "history": {
+                        "items": {},
+                        "title": "History",
+                        "type": "array"
+                    },
+                    "context": {
+                        "additionalProperties": true,
+                        "title": "Context",
+                        "type": "object"
+                    },
+                    "approver_profile": {
+                        "additionalProperties": true,
+                        "title": "Approver Profile",
+                        "type": "object"
+                    },
+                    "ai_card_draft": {
+                        "additionalProperties": true,
+                        "title": "Ai Card Draft",
+                        "type": "object"
+                    },
+                    "draft_spec": {
+                        "additionalProperties": true,
+                        "title": "Draft Spec",
+                        "type": "object"
+                    },
+                    "enforced_spec": {
+                        "additionalProperties": true,
+                        "title": "Enforced Spec",
+                        "type": "object"
+                    },
+                    "corrections": {
+                        "items": {},
+                        "title": "Corrections",
+                        "type": "array"
+                    },
+                    "used_safe_mode": {
+                        "title": "Used Safe Mode",
+                        "type": "boolean"
+                    },
+                    "rendered_card": {
+                        "additionalProperties": true,
+                        "title": "Rendered Card",
+                        "type": "object"
+                    },
+                    "subject": {
+                        "title": "Subject",
+                        "type": "string"
+                    },
+                    "html": {
+                        "title": "Html",
+                        "type": "string"
+                    },
+                    "card": {
+                        "additionalProperties": true,
+                        "title": "Card",
+                        "type": "object"
+                    },
+                    "approver_email": {
+                        "title": "Approver Email",
+                        "type": "string"
+                    }
+                },
+                "required": []
+            },
+            "graph": {
+                "nodes": [
+                    {
+                        "id": "__start__",
+                        "name": "__start__",
+                        "type": "__start__",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "parse_input",
+                        "name": "parse_input",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "fetch_context",
+                        "name": "fetch_context",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "load_rules",
+                        "name": "load_rules",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "ai_card_spec",
+                        "name": "ai_card_spec",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "build_card_spec",
+                        "name": "build_card_spec",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "enforce_card_rules",
+                        "name": "enforce_card_rules",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "render_card",
+                        "name": "render_card",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "finalize_render",
+                        "name": "finalize_render",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "__end__",
+                        "name": "__end__",
+                        "type": "__end__",
+                        "subgraph": null,
+                        "metadata": {}
+                    }
+                ],
+                "edges": [
+                    {
+                        "source": "__start__",
+                        "target": "parse_input",
+                        "label": null
+                    },
+                    {
+                        "source": "ai_card_spec",
+                        "target": "build_card_spec",
+                        "label": null
+                    },
+                    {
+                        "source": "build_card_spec",
+                        "target": "enforce_card_rules",
+                        "label": null
+                    },
+                    {
+                        "source": "enforce_card_rules",
+                        "target": "render_card",
+                        "label": null
+                    },
+                    {
+                        "source": "fetch_context",
+                        "target": "load_rules",
+                        "label": null
+                    },
+                    {
+                        "source": "load_rules",
+                        "target": "ai_card_spec",
+                        "label": null
+                    },
+                    {
+                        "source": "parse_input",
+                        "target": "fetch_context",
+                        "label": null
+                    },
+                    {
+                        "source": "render_card",
+                        "target": "finalize_render",
+                        "label": null
+                    },
+                    {
+                        "source": "finalize_render",
+                        "target": "__end__",
+                        "label": null
+                    }
+                ]
+            }
+        },
+        {
+            "filePath": "process_response",
+            "uniqueId": "aaba16ca-62df-47e3-a8c2-0079d282a5ec",
+            "type": "agent",
+            "input": {
+                "type": "object",
+                "properties": {
+                    "request": {
+                        "title": "Request"
+                    },
+                    "routing_plan": {
+                        "title": "Routing Plan"
+                    },
+                    "current_approver_index": {
+                        "title": "Current Approver Index",
+                        "type": "integer"
+                    },
+                    "response": {
+                        "title": "Response"
+                    },
+                    "history": {
+                        "items": {},
+                        "title": "History",
+                        "type": "array"
+                    },
+                    "next_action": {
+                        "title": "Next Action",
+                        "type": "string"
+                    },
+                    "learning_signals": {
+                        "additionalProperties": true,
+                        "title": "Learning Signals",
+                        "type": "object"
+                    },
+                    "outcome": {
+                        "title": "Outcome"
+                    },
+                    "next_action_out": {
+                        "title": "Next Action Out",
+                        "type": "string"
+                    },
+                    "next_approver": {
+                        "title": "Next Approver"
+                    },
+                    "completion_summary": {
+                        "type": "string"
+                    },
+                    "escalation_reason": {
+                        "type": "string"
+                    },
+                    "info_request_message": {
+                        "type": "string"
+                    },
+                    "learning_signals_out": {
+                        "additionalProperties": true,
+                        "title": "Learning Signals Out",
+                        "type": "object"
+                    }
+                },
+                "required": []
+            },
+            "output": {
+                "type": "object",
+                "properties": {
+                    "request": {
+                        "title": "Request"
+                    },
+                    "routing_plan": {
+                        "title": "Routing Plan"
+                    },
+                    "current_approver_index": {
+                        "title": "Current Approver Index",
+                        "type": "integer"
+                    },
+                    "response": {
+                        "title": "Response"
+                    },
+                    "history": {
+                        "items": {},
+                        "title": "History",
+                        "type": "array"
+                    },
+                    "next_action": {
+                        "title": "Next Action",
+                        "type": "string"
+                    },
+                    "learning_signals": {
+                        "additionalProperties": true,
+                        "title": "Learning Signals",
+                        "type": "object"
+                    },
+                    "outcome": {
+                        "title": "Outcome"
+                    },
+                    "next_action_out": {
+                        "title": "Next Action Out",
+                        "type": "string"
+                    },
+                    "next_approver": {
+                        "title": "Next Approver"
+                    },
+                    "completion_summary": {
+                        "type": "string"
+                    },
+                    "escalation_reason": {
+                        "type": "string"
+                    },
+                    "info_request_message": {
+                        "type": "string"
+                    },
+                    "learning_signals_out": {
+                        "additionalProperties": true,
+                        "title": "Learning Signals Out",
+                        "type": "object"
+                    }
+                },
+                "required": []
+            },
+            "graph": {
+                "nodes": [
+                    {
+                        "id": "__start__",
+                        "name": "__start__",
+                        "type": "__start__",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "parse_input",
+                        "name": "parse_input",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "interpret_decision",
+                        "name": "interpret_decision",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "extract_signals",
+                        "name": "extract_signals",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "finalize_response",
+                        "name": "finalize_response",
+                        "type": "node",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "__end__",
+                        "name": "__end__",
+                        "type": "__end__",
+                        "subgraph": null,
+                        "metadata": {}
+                    }
+                ],
+                "edges": [
+                    {
+                        "source": "__start__",
+                        "target": "parse_input",
+                        "label": null
+                    },
+                    {
+                        "source": "extract_signals",
+                        "target": "finalize_response",
+                        "label": null
+                    },
+                    {
+                        "source": "interpret_decision",
+                        "target": "extract_signals",
+                        "label": null
+                    },
+                    {
+                        "source": "parse_input",
+                        "target": "interpret_decision",
+                        "label": null
+                    },
+                    {
+                        "source": "finalize_response",
+                        "target": "__end__",
+                        "label": null
+                    }
+                ]
+            }
+        }
+    ]
+}

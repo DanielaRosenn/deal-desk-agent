@@ -1,0 +1,32 @@
+flowchart TB
+  subgraph Intake["1 - Start + Agent evaluate/draft"]
+    Trigger[/"Opportunity change<br/>(mock Salesforce)"/]:::external --> Agent["Service task: plan<br/>evaluate + draft"]:::service
+    Agent --> Draft[("Disposition +<br/>recommendation +<br/>approver chain")]:::data
+  end
+  subgraph Route["2 - Disposition gateway"]
+    Draft --> Disp{"disposition?"}:::decision
+    Disp -->|auto_clear| Clear["Close auto_cleared"]:::service
+    Disp -->|exception| Exc["Exception path"]:::human
+  end
+  subgraph Loop["3 - Sequential multi-instance subprocess (per approver)"]
+    Disp -->|needs_approval| Render["Service task:<br/>render card"]:::service
+    Render --> SendCard["Outlook task:<br/>send Adaptive Card"]:::service
+    SendCard --> Wait["User task:<br/>approval (Action Center)"]:::human
+    Wait --> Decide{"decision?"}:::decision
+    Wait -.->|boundary SLA timer| Escalate["Reminder + escalated"]:::human
+  end
+  subgraph Closeout["4 - Notify + log"]
+    Decide -->|Approve / Reject| Notify["Outlook task:<br/>notify requester"]:::service
+    Clear --> Log[("Data Fabric:<br/>ApprovalAudit")]:::data
+    Notify --> Log
+  end
+  Conn[("Outlook connection<br/>(live, CLI-bound)")]:::data --> SendCard
+  Conn --> Notify
+  Bridge[["Azure Function bridge<br/>CompleteAppTask -> resume"]]:::service --> Wait
+
+  classDef service fill:#EFF6FF,stroke:#3B82F6,color:#1E3A8A,stroke-width:1.5px
+  classDef data fill:#F1F5F9,stroke:#64748B,color:#0F172A,stroke-width:1.5px
+  classDef decision fill:#FFFBEB,stroke:#F59E0B,color:#92400E,stroke-width:2px
+  classDef human fill:#F5F3FF,stroke:#8B5CF6,color:#5B21B6,stroke-width:1.5px
+  classDef external fill:#FAFAFA,stroke:#94A3B8,color:#334155,stroke-width:1.5px
+  linkStyle default stroke:#94A3B8,stroke-width:1.5px

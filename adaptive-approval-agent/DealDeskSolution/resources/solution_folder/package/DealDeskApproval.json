@@ -1,0 +1,23 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "DealDeskApproval",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "4f04eb81-7e0f-49a9-b68c-7e6cbe2af3d4",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "DealDeskApproval"
+    },
+    "locks": [],
+    "key": "16acf19d-f87e-479e-9d83-b4eb88c5576e",
+    "files": []
+  }
+}
