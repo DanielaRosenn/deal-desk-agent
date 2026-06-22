@@ -1,0 +1,105 @@
+{
+  "title": [
+    "Deal Desk Agent",
+    "Your AI Deal Desk Analyst"
+  ],
+  "team_names": [
+    "Daniela Rosenstein",
+    "Coded Agents (LangGraph)",
+    "Maestro BPMN",
+    "WaitDecision Robot"
+  ],
+  "team_roles": [
+    "Builder @ Cato Networks",
+    "plan / render / process_response (Python)",
+    "orchestration, gateway, sequential loop",
+    "RPA: 3 channels + UiPath.Persistence wait"
+  ],
+  "team_footer": [
+    "Track 2: UiPath Maestro BPMN",
+    "Coding-agent bonus: Cursor + Claude via UiPath for Coding Agents"
+  ],
+  "problem": [
+    "Every sales org has a Deal Desk: the team that reviews pricing exceptions,",
+    "emails managers up the chain, waits for replies, consolidates decisions,",
+    "and updates the CRM. It is manual, inbox-driven, and slow.",
+    "",
+    "  - No SLA: deals stall in inboxes for days.",
+    "  - No consistency: routing thresholds drift between managers.",
+    "  - No audit trail: decisions buried in email threads."
+  ],
+  "solution": [
+    "The Deal Desk Agent does that job, end to end on Automation Cloud:",
+    "",
+    "  1. Live Salesforce data via AgentHub MCP; approver chain from the org chart.",
+    "  2. Risk scoring + LLM rationale -> recommendation and disposition.",
+    "  3. Low-risk deals auto-approve with zero human touch.",
+    "  4. WaitDecision Robot reaches each approver on 3 channels at once:",
+    "     Outlook Adaptive Card + Slack DM + Action Center 'wait for task'.",
+    "  5. AWS Lambda HITL bridge mints a token; any channel resolves the wait.",
+    "  6. process_response interprets decisions; rejection short-circuits the chain.",
+    "  7. Slack + Outlook summary to the AE; Data Fabric ApprovalAudit record."
+  ],
+  "benefits": [
+    "For the Opportunity Owner (AE):",
+    "  - No chasing managers: agent routes, robot sends, BPMN tracks.",
+    "  - Slack DM + Outlook summary with the full decision trail at the end.",
+    "  - Low-risk deals (<=5% / <=$50k) clear with ZERO human touch.",
+    "",
+    "For the business:",
+    "  - Consistent policy applied identically via the risk-score formula.",
+    "  - Rejection short-circuits the chain (no wasted approver time).",
+    "  - Data Fabric logs the agent recommendation vs. each human decision."
+  ],
+  "tech": [
+    "Technologies (verified live Jun 22 2026):",
+    "  Coded Agents (Python + LangGraph): plan, render, process_response",
+    "  Maestro BPMN 2.0: sequential multi-instance loop, completionCondition",
+    "  WaitDecision Robot (UiPath RPA + Persistence): all three channels",
+    "  Action Center: external task 'wait for task' (Deal Desk catalog)",
+    "  Outlook Adaptive Card: originator 61fed71d, Action.Http buttons, HTML fallback",
+    "  Slack Block Kit: DM to approver + requester",
+    "  AWS Lambda + CloudFront: HITL bridge for the approval loop",
+    "  AgentHub MCP: Salesforce DealDesk MCP (live IS, read-only SOQL)",
+    "  Data Fabric: ApprovalAudit; deployed to Shared/DealDeskApprovalGlobal"
+  ],
+  "architecture": [
+    "Salesforce event -> Maestro BPMN -> plan agent:",
+    "  AgentHub MCP queries live Salesforce; org chart -> approver chain",
+    "  risk_score + LLM reasoning -> RoutingPlan (disposition + rationale + chain)",
+    "",
+    "Disposition gateway:",
+    "  auto_approve   -> Slack + Outlook to AE + Data Fabric audit (zero touch)",
+    "  exception      -> immediate human review",
+    "  needs_approval -> sequential approver loop (per approver):",
+    "    render agent builds the approval payload",
+    "    WaitDecision Robot: Outlook Adaptive Card + Slack DM + Action Center task",
+    "    AWS Lambda HITL bridge mints token; suspend via UiPath.Persistence",
+    "    Approver decides on any channel -> robot resumes -> process_response",
+    "    Rejection short-circuits (BPMN completionCondition)",
+    "",
+    "On completion: Slack DM + Outlook summary to AE -> Data Fabric ApprovalAudit"
+  ],
+  "demo_header": [
+    "Three demo scenarios"
+  ],
+  "demo_body": [
+    "Live test results - Jun 22 2026 (all channels verified):",
+    "  TEST-001: GlobalTech $120k/18% -> Approve (within policy)",
+    "  TEST-002: MegaCorp $350k/32%  -> Approve with conditions (escalation)",
+    "  TEST-003: StartupXYZ $28k/45% -> Reject (margin impact too high)",
+    "  TEST-004: Pharma $780k/22%    -> Approve (enterprise, Finance pre-approved)",
+    "  Outlook Adaptive Card | Slack DM | Action Center  - all verified",
+    "",
+    "Scenario 1 - Auto-approve (4% / $30k): zero human touches.",
+    "Scenario 2 - One approver (8% / $40k): Adaptive Card + Slack to Manager.",
+    "Scenario 3 - Full chain (30% / $1.2M): four sequential approvers; rejection",
+    "  short-circuits; full Data Fabric audit trail."
+  ],
+  "closing": [
+    "Every Deal Desk should work like this.",
+    "Collect. Reason. Route. Sign-off. Audit. Automatically.",
+    "",
+    "Track 2: Maestro BPMN  |  Coding-agent bonus  |  Runs on Automation Cloud"
+  ]
+}
