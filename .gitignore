@@ -91,8 +91,6 @@ adaptive-approval-agent/pytest.ini
 docs/
 
 # Submission - old drafts and redundant assets
-submission/forum-submission.md
-submission/project-story.md
 submission/deck/slide-*.png
 submission/deck/Deal-Desk-Agent.pptx
 submission/deck/Deal-Desk-Agent-native-editable.pptx
