@@ -1,28 +1,33 @@
 flowchart TB
-  subgraph Intake["1 - Start + Agent evaluate/draft"]
-    Trigger[/"Opportunity change<br/>(mock Salesforce)"/]:::external --> Agent["Service task: plan<br/>evaluate + draft"]:::service
+  subgraph Intake["1 - Start + plan agent"]
+    Trigger[/"Salesforce opportunity change"/]:::external --> Agent["Coded agent: plan<br/>evaluate + risk score + LLM rationale"]:::service
     Agent --> Draft[("Disposition +<br/>recommendation +<br/>approver chain")]:::data
   end
   subgraph Route["2 - Disposition gateway"]
     Draft --> Disp{"disposition?"}:::decision
-    Disp -->|auto_clear| Clear["Close auto_cleared"]:::service
-    Disp -->|exception| Exc["Exception path"]:::human
+    Disp -->|auto_approve| Clear["Notify AE (Slack + Outlook)<br/>write audit"]:::service
+    Disp -->|exception| Exc["Human review"]:::human
   end
   subgraph Loop["3 - Sequential multi-instance subprocess (per approver)"]
-    Disp -->|needs_approval| Render["Service task:<br/>render card"]:::service
-    Render --> SendCard["Outlook task:<br/>send Adaptive Card"]:::service
-    SendCard --> Wait["User task:<br/>approval (Action Center)"]:::human
-    Wait --> Decide{"decision?"}:::decision
-    Wait -.->|boundary SLA timer| Escalate["Reminder + escalated"]:::human
+    Disp -->|needs_approval| Render["Coded agent: render<br/>build approval payload"]:::service
+    Render --> Robot["WaitDecision Robot (RPA)<br/>+ UiPath.Persistence suspend"]:::service
+    Robot --> OutlookCard["Outlook Adaptive Card<br/>Approve / Reject / Request Info"]:::service
+    Robot --> Slack["Slack Block Kit DM<br/>to approver"]:::service
+    Robot --> AC["Action Center<br/>external task (wait for task)"]:::human
+    OutlookCard -->|decision| Resume["Robot resumes<br/>returns out_Decision"]:::service
+    Slack -.->|link back| OutlookCard
+    AC -->|decision| Resume
+    Resume --> ProcResp["Coded agent: process_response<br/>interpret decision"]:::service
+    ProcResp -.->|rejected| Short["short-circuit chain"]:::human
   end
-  subgraph Closeout["4 - Notify + log"]
-    Decide -->|Approve / Reject| Notify["Outlook task:<br/>notify requester"]:::service
+  subgraph Closeout["4 - Notify + audit"]
+    ProcResp --> Notify["Slack DM + Outlook summary<br/>to Opportunity Owner"]:::service
     Clear --> Log[("Data Fabric:<br/>ApprovalAudit")]:::data
     Notify --> Log
   end
-  Conn[("Outlook connection<br/>(live, CLI-bound)")]:::data --> SendCard
-  Conn --> Notify
-  Bridge[["Azure Function bridge<br/>CompleteAppTask -> resume"]]:::service --> Wait
+  SF[("Salesforce<br/>live IS + AgentHub MCP")]:::data --> Agent
+  HiBob[("HiBob org chart")]:::data --> Agent
+  Bridge[["AWS Lambda + CloudFront<br/>HITL bridge (approval loop)"]]:::service --> Robot
 
   classDef service fill:#EFF6FF,stroke:#3B82F6,color:#1E3A8A,stroke-width:1.5px
   classDef data fill:#F1F5F9,stroke:#64748B,color:#0F172A,stroke-width:1.5px

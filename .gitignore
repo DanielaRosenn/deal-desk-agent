@@ -60,6 +60,51 @@ debug_xaml.py
 fix_ctype.py
 fix_slack_*.py
 
+# UiPath Studio IDE internals
+**/.project/
+**/.settings/
+**/.tmh/
+
+# AI assistant internals (Cursor / Claude)
+**/.agent/
+**/.claude/
+**/CLAUDE.md
+**/AGENTS.md
+**/agent/__uipath/state.db
+
+# Generated / redundant
+**/schemas_export/
+**/artifacts/
+**/configs/expense/
+
+# Obsolete sub-projects
+adaptive-approval-agent/DealDeskSolution/DealDeskHitlApi/
+adaptive-approval-agent/DealDeskSolution/userProfile/
+adaptive-approval-agent/TestSolution/
+adaptive-approval-agent/scripts/
+adaptive-approval-agent/test-payload.json
+adaptive-approval-agent/mypy.ini
+adaptive-approval-agent/ruff.toml
+adaptive-approval-agent/pytest.ini
+
+# Internal planning / dev docs
+docs/
+
+# Submission - old drafts and redundant assets
+submission/forum-submission.md
+submission/project-story.md
+submission/deck/slide-*.png
+submission/deck/Deal-Desk-Agent.pptx
+submission/deck/Deal-Desk-Agent-native-editable.pptx
+submission/deck/build_deck.py
+submission/deck/build_pptx.py
+submission/deck/make_pdf.py
+submission/diagrams/Main.xaml
+submission/diagrams/entry-points.json
+submission/diagrams/mmdc.json
+submission/diagrams/project.json
+submission/diagrams/project.uiproj
+
 # OS
 .DS_Store
 Thumbs.db

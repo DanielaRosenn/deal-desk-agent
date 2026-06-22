@@ -2,30 +2,36 @@ sequenceDiagram
   autonumber
   participant Start as Opportunity change
   participant Bpmn as Maestro BPMN
-  participant Agent as Coded Agent
+  participant Agent as Coded Agents
+  participant Robot as WaitDecision Robot
+  participant Hitl as AWS Lambda HITL bridge
   participant Outlook as Outlook
-  participant Bridge as Azure Function bridge
+  participant Slack as Slack
+  participant AC as Action Center
   participant Approver as Approver
   participant Log as Data Fabric
 
-  Start->>Bpmn: Start instance (payload)
-  Bpmn->>Agent: plan (evaluate + draft)
+  Start->>Bpmn: Start instance (Salesforce payload)
+  Bpmn->>Agent: plan (risk score + LLM rationale + chain)
   Agent-->>Bpmn: disposition, recommendation, approver chain
-  alt disposition == auto_clear
-    Bpmn->>Log: Record auto_cleared
+  alt disposition == auto_approve
+    Bpmn->>Log: Record auto_approved
   else disposition == needs_approval
     loop per approver in chain
-      Bpmn->>Agent: render card
-      Bpmn->>Outlook: send Adaptive Card
-      Outlook->>Approver: card delivered (task open)
-      alt decision within SLA
-        Approver->>Bridge: click Approve or Reject
-        Bridge->>Bpmn: CompleteAppTask (resume)
-        Bpmn->>Agent: process_response decides next action
-      else SLA breach
-        Bpmn->>Outlook: reminder and set escalated
-      end
+      Bpmn->>Agent: render (approval payload)
+      Bpmn->>Robot: create approval (suspend via Persistence)
+      Robot->>Hitl: POST /api/v1/approvals (mint response token)
+      Robot->>Outlook: send Adaptive Card
+      Robot->>Slack: send Block Kit DM
+      Robot->>AC: create external task (wait for task)
+      Approver->>Outlook: click Approve / Reject
+      Approver-->>AC: or decide in Action Center
+      Hitl-->>Robot: decision via token callback
+      Robot-->>Bpmn: resume, return out_Decision
+      Bpmn->>Agent: process_response (interpret decision)
+      note over Bpmn: rejection short-circuits remaining chain
     end
-    Bpmn->>Outlook: notify requester
-    Bpmn->>Log: record agent rec vs human decision
+    Bpmn->>Slack: notify requester (DM)
+    Bpmn->>Outlook: notify requester (summary)
+    Bpmn->>Log: record agent rec vs each human decision
   end

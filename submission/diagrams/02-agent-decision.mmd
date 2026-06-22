@@ -13,8 +13,12 @@ flowchart TD
   Skip1 --> D2
   D2 -->|yes| AddCfo["+ CFO"]:::service
   D2 -->|no| Skip2["no CFO"]:::service
-  AddCfo --> Draft["Draft recommended_decision<br/>+ rationale + RoutingPlan"]:::endOk
-  Skip2 --> Draft
+  AddCfo --> D3{"value > $750k?"}:::decision
+  Skip2 --> D3
+  D3 -->|yes| AddCro["+ CRO"]:::service
+  D3 -->|no| Skip3["no CRO"]:::service
+  AddCro --> Draft["Draft recommended_decision<br/>+ rationale + RoutingPlan"]:::endOk
+  Skip3 --> Draft
 
   classDef service fill:#EFF6FF,stroke:#3B82F6,color:#1E3A8A,stroke-width:1.5px
   classDef decision fill:#FFFBEB,stroke:#F59E0B,color:#92400E,stroke-width:2px

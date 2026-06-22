@@ -1,9 +1,0 @@
-hard_rules:
-  - id: expense_amount_director
-    when:
-      field: expense.total_amount
-      operator: ">"
-      value: 10000
-    require_role: director
-
-soft_guidance: []
