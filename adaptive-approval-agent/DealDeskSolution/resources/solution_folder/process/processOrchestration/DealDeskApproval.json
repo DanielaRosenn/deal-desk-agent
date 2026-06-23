@@ -119,7 +119,7 @@
         "resourceKind": "Connection",
         "resourceType": "uipath-uipath-dataservice",
         "resourceKey": "58ec2518-2165-44ff-9646-5170f811a42d",
-        "resourceName": "daniela.rosenstein@catonetworks.com_42",
+        "resourceName": "daniela.rosenstein@catonetworks.com_44",
         "folderKey": "c64a0cab-9723-4006-90d8-fd10f6e1ceff"
       },
       {
@@ -139,7 +139,7 @@
         "resourceKind": "Connection",
         "resourceType": "uipath-microsoft-outlook365",
         "resourceKey": "45b3022f-96ef-4ca4-99bb-39f15af717d5",
-        "resourceName": "daniela.rosenstein@catonetworks.com_43",
+        "resourceName": "daniela.rosenstein@catonetworks.com_45",
         "folderKey": "5fc9fcc4-7156-40c2-9930-7ce61dbbf78b"
       }
     ],

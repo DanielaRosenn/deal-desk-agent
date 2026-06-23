@@ -1,7 +1,7 @@
 {
   "docVersion": "1.0.0",
   "resource": {
-    "name": "daniela.rosenstein@catonetworks.com_43",
+    "name": "daniela.rosenstein@catonetworks.com_45",
     "kind": "connection",
     "type": "uipath-microsoft-outlook365",
     "apiVersion": "integrationservice.uipath.com/v1",
@@ -15,7 +15,7 @@
     ],
     "spec": {
       "connectorName": "Microsoft Outlook 365",
-      "name": "daniela.rosenstein@catonetworks.com_43",
+      "name": "daniela.rosenstein@catonetworks.com_45",
       "authenticationType": "AuthenticateAfterDeployment",
       "connectorVersion": "1.38.8",
       "connectorKey": "uipath-microsoft-outlook365",

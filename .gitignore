@@ -39,9 +39,14 @@ build/
 venv/
 .uv/
 
-# Cursor IDE internals (transcripts are huge and private)
+# Cursor IDE internals
 .cursor/agent-transcripts/
 .cursor/projects/
+.cursor/mcp.json
+.cursor/plans/
+.cursor/rules/
+.cursor/skills/uiplan/
+.cursor/skills/uiplan-*/
 
 # Root-level artifact dumps (not source code)
 config_1988.json
@@ -53,6 +58,17 @@ config_1993.json
 config_1994.json
 DealDeskApproval-fixed.nupkg/
 DealDeskSolution_1.0.*.zip
+CALLBACK_VS_POLLING_STATUS.md
+E2E_RESULTS.md
+E2E_STATUS_FINAL.md
+E2E_TESTING_GUIDE.md
+FINAL_RESOLUTION.md
+HITL_PERSISTENCE_FIX.md
+IMPLEMENTATION_COMPLETE.md
+approval_audit_schema.json
+templates/
+test_hitl_contract.ps1
+test_poll_by_id.ps1
 
 # Debug one-off scripts at repo root
 debug_slack_*.py
@@ -80,12 +96,15 @@ fix_slack_*.py
 # Obsolete sub-projects
 adaptive-approval-agent/DealDeskSolution/DealDeskHitlApi/
 adaptive-approval-agent/DealDeskSolution/userProfile/
+adaptive-approval-agent/DealDeskSolution/deploy-config-*.json
 adaptive-approval-agent/TestSolution/
 adaptive-approval-agent/scripts/
 adaptive-approval-agent/test-payload.json
 adaptive-approval-agent/mypy.ini
 adaptive-approval-agent/ruff.toml
 adaptive-approval-agent/pytest.ini
+adaptive-approval-agent/agent/plan_in.json
+adaptive-approval-agent/tests/fixtures/
 
 # Internal planning / dev docs
 docs/
