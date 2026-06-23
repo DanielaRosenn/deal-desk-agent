@@ -41,3 +41,21 @@ The builder maps `content.json` keys to template placeholders by these substring
 
 Any key omitted from `content.json` leaves that placeholder untouched. The architecture image is
 inserted on slide 5 at `Inches(0.95), Inches(4.0)`, sized `11.4 x 2.6 in`.
+
+## Known template quirks (verify after building)
+
+This template has booby-traps the placeholder fill does NOT handle — always render the deck to
+images and check:
+
+- **Body text is white by default.** The builder now sets dark ink on filled runs, but any text
+  written by other means (table cells, manually added boxes) will be invisible unless you set
+  `run.font.color.rgb`.
+- **Slide 2 ships 4 stock-photo placeholders** (a smiling person ×4). Delete those PICTURE shapes
+  (`shape._element.getparent().remove(shape._element)`) and reposition the name/role text up.
+- **Slide 4 has a Lorem Ipsum table** that the placeholder schema does not touch. Populate the
+  table cells directly, and remove the duplicate overlapping technologies text box + the broken
+  glyph rectangle.
+- **Slide 5 architecture image:** only added if the `architecture` placeholder text is still present
+  at insertion time — when re-running on an already-filled deck, add the picture explicitly.
+
+Always export to PNG/PDF and eyeball every slide before sharing.

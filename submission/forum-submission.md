@@ -59,7 +59,7 @@ The design principle throughout: **the right actor for every step.** The agent r
 
 The four cases above ran simultaneously on Automation Cloud — Outlook Adaptive Cards, Slack DMs, and Action Center tasks all delivered and verified.
 
-Deployed in `Shared/DealDeskApprovalGlobal`: agent package `adaptive-approval-agent-core` v0.1.17 (3 entry points) · BPMN `DealDeskApproval` v1.1.9 · Robot `WaitDecision` v1.3.16 · Solution `.uipx` v1.2.3 · `Salesforce DealDesk MCP` AgentHub server live · AWS HITL bridge (CloudFront + Lambda) serving the approval API.
+Deployed in `Shared/DealDeskApprovalGlobal`: agent package `adaptive-approval-agent-core` v0.1.17 (3 entry points) · BPMN `DealDeskApproval` v1.1.9 · Robot `WaitDecision` v1.3.16 · Solution `DealDeskSolution` v1.1.15 · `Salesforce DealDesk MCP` AgentHub server live · AWS HITL bridge (CloudFront + Lambda) serving the approval API.
 
 ## Built with
 
@@ -71,7 +71,7 @@ UiPath Maestro BPMN 2.0 · Coded Agents (Python / LangGraph) · UiPath RPA + UiP
 |---|---|
 | Demo video | `<LINK>` |
 | Presentation deck (Other resources) | `<OneDrive/Drive/Dropbox link — set to "anyone with link can view">` |
-| Code (repo or downloadable .zip) | `<LINK>` |
+| Code (repo or downloadable .zip) | https://github.com/DanielaRosenn/deal-desk-agent |
 | Interactive project page | `<hosted URL of submission/explore/index.html>` |
 | Judges' bundle (.zip — Additional info upload) | attached: architecture doc, diagrams, test evidence, blueprint |
 

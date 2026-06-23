@@ -14,6 +14,9 @@ from pathlib import Path
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN
+from pptx.dml.color import RGBColor
+
+INK = RGBColor(0x0F, 0x17, 0x2A)  # template body placeholders default to white text
 
 # Candidate template locations, in priority order (after --template).
 TEMPLATE_CANDIDATES = [
@@ -57,6 +60,7 @@ def set_block(shape, lines, size=18, bold_first=True, align=PP_ALIGN.LEFT):
             r.font.size = Pt(size)
             r.font.bold = bool(bold_first and i == 0)
             r.font.name = "Segoe UI"
+            r.font.color.rgb = INK
 
 
 def matches(text, needle, exact):
