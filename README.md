@@ -27,6 +27,22 @@ The Deal Desk Agent does the whole job autonomously:
 
 ---
 
+## UiPath Components Used
+
+| Component | Role |
+|---|---|
+| **Maestro BPMN** | Orchestrates the end-to-end approval flow; sequential multi-instance subprocess per approver with `completionCondition` short-circuit |
+| **Coded Agents (Python / LangGraph)** | Three agents: `plan` (risk score + LLM rationale + approver chain), `render` (Adaptive Card payload), `process_response` (interprets decisions) |
+| **UiPath RPA + Persistence Activities** | WaitDecision Robot sends all three notification channels and suspends via `UiPath.Persistence.Activities` — zero polling |
+| **Action Center** | Native external task for in-portal approvals (Deal Desk catalog) |
+| **Integration Service** | Outlook 365 (Adaptive Cards), Slack (Block Kit DMs), UiPath Data Fabric (audit records) |
+| **AgentHub MCP** | Salesforce read-only sidecar — live opportunity data, ARR, ACV, product mix |
+| **Data Fabric** | Writes a structured `ApprovalAudit` record per outcome — queryable system of record |
+
+**Agent Type: Coded Agents** — all three agent entry points (`plan`, `render`, `process_response`) are Python-based LangGraph state machines deployed as Coded Agents on Automation Cloud. No Low-code Agent Builder was used.
+
+---
+
 ## Architecture
 
 ```
@@ -91,34 +107,77 @@ submission/
 
 ## Setup
 
-```bash
-# 1. Copy secrets template
-cp .env.example .env
-# fill in UIPATH_CLIENT_ID, UIPATH_CLIENT_SECRET, SLACK_BOT_TOKEN, HITL_API_KEY
+### Prerequisites
 
-# 2. Install Python dependencies (requires uv)
+- [UiPath CLI (`uip`)](https://docs.uipath.com/automation-cloud/docs/uipath-cli) installed and authenticated (`uip login`)
+- Python 3.11+ with [`uv`](https://docs.astral.sh/uv/) package manager
+- A UiPath Automation Cloud tenant with Integration Service connections for **Outlook 365**, **Slack**, and **Data Fabric** already authenticated
+
+### Step 1 — Python agent
+
+```bash
 cd adaptive-approval-agent
+
+# Install dependencies
 uv sync
 
-# 3. Run unit tests
+# Run unit tests
 uv run pytest tests/unit/
+```
 
-# 4. Deploy to Automation Cloud (solution already live on catonetworks/Test)
-uip solution deploy adaptive-approval-agent/DealDeskSolution/DealDeskSolution_1.2.3.deploy.config.json
+### Step 2 — Environment secrets
+
+Create a `.env` file at the repo root (see `.env.example` if present):
+
+```
+UIPATH_CLIENT_ID=<your-client-id>
+UIPATH_CLIENT_SECRET=<your-client-secret>
+SLACK_BOT_TOKEN=<xoxb-...>
+HITL_CALLBACK_BASE_URL=<your-AWS-CloudFront-or-ngrok-URL>
+```
+
+### Step 3 — Deploy to Automation Cloud
+
+```bash
+# Publish the solution package
+uip solution publish adaptive-approval-agent/DealDeskSolution/out/DealDeskSolution_1.1.15.zip --wait
+
+# Deploy to Shared/DealDeskApprovalGlobal folder
+uip solution deploy run \
+  --name "DealDeskApproval-Final" \
+  --package-name "DealDeskSolution" \
+  --package-version "1.1.15" \
+  --parent-folder-path "Shared" \
+  --folder-name "DealDeskApprovalGlobal"
+```
+
+> **Note for judges:** The solution is already live on the hackathon tenant (`hackathon26_218 / DefaultTenant`, folder `Shared/DealDeskApprovalGlobal`) — no local deployment is required to evaluate it.
+
+### Step 4 — Trigger a run
+
+Send a test payload via the Maestro BPMN trigger or run the `plan` agent directly:
+
+```bash
+cd adaptive-approval-agent
+uv run python -c "
+from agent.graphs.plan import run_plan
+run_plan({'opportunity_id': 'OPP-TEST-001', 'discount_pct': 32, 'arr': 350000})
+"
 ```
 
 ---
 
 ## Live evidence
 
-The solution is deployed and tested on **UiPath Automation Cloud** (`catonetworks / Test` tenant,
+The solution is deployed and tested on **UiPath Automation Cloud** (hackathon tenant `hackathon26_218`,
 folder `Shared/DealDeskApprovalGlobal`):
 
 | Component | Version | Status |
 |---|---|---|
-| WaitDecision Robot | 1.3.16 | deployed, latest |
-| DealDeskApproval BPMN | 1.1.12 | deployed, latest |
-| DealDeskAgent (plan/render/process_response) | latest | deployed |
+| WaitDecision Robot | 1.3.16 | deployed |
+| DealDeskApproval BPMN | 1.1.9 | deployed |
+| DealDeskAgent (plan / render / process_response) | 0.1.17 | deployed |
+| Solution package `DealDeskSolution` | 1.1.15 | active |
 
 See `submission/hack-testimonies.md` for full end-to-end test results including confirmed
 Adaptive Card delivery, Action Center task creation, and Slack DM receipts.
